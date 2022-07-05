@@ -16,7 +16,6 @@ public class Stealth {
         makeCheekiHappyCommand(event);
         ghostCommand(event);
         dmDetector(event);
-        mediaLinkDetector(event);
     }
 
     public void makeCheekiHappyCommand(MessageReceivedEvent event) {
@@ -71,23 +70,6 @@ public class Stealth {
                 moss.openPrivateChannel().queue((channel) -> {
                     channel.sendMessage("`" + event.getAuthor().getName() + "`\n" +  content).queue();
                 });
-            }
-        }
-    }
-
-    public void mediaLinkDetector(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        String[] filetypes = {".mp4", ".mov", ".webm"};
-        if(
-                (content.contains("https://media.discordapp.net/attachments")) &&
-                (Arrays.stream(filetypes).anyMatch(content.toLowerCase(Locale.ROOT)::contains))
-        ){
-            content = content.replace("media.discordapp.net","cdn.discordapp.com");
-            event.getMessage().reply("try this one maybe\n" + content).mentionRepliedUser(false).queue();
-            try{
-                event.getMessage().suppressEmbeds(true).queue();
-            }catch (PermissionException ignored){
-                //can't do that, no perms or DM
             }
         }
     }
