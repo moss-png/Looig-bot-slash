@@ -10,10 +10,12 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import okhttp3.internal.Internal;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main extends ListenerAdapter {
@@ -95,6 +97,28 @@ public class Main extends ListenerAdapter {
         if (event.getName().equals("yeah")) {
             event.reply("yeah").queue();
         }else{
+//            switch (event.getName()){
+//                case "funnycat":
+//                    new Cat(event);
+//                    break;
+//                case "management":
+//                    new Management(event);
+//                    break;
+//                case "internal":
+//                    new BotInternal(event);
+//                    break;
+//                case "math":
+//                    new MathStuff(event);
+//                    break;
+//                case "standard":
+//                    new Standard(event);
+//                    break;
+//                case "tools":
+//                    new Tools(event);
+//                    break;
+//                default:
+//                    break;
+//            }
             new Cat(event);
         }
     }
