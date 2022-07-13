@@ -27,8 +27,8 @@ public class Standard {
         if (content.contains(getGuildPrefix(event) + "help") || content.contains(getGuildPrefix(event) + "commands")) {
             EmbedBuilder builder = new EmbedBuilder();
 
-            builder.setTitle("Hi I'm Looig (VER. 0.10.5)\n");
-            builder.setDescription("suck it ;)");
+            builder.setTitle("Hi I'm Looig (VER. 0.10.6)\n");
+            builder.setDescription("I ain't writing all that)");
             builder.setFooter("Made with \u2764 by moss#0059", null);
             builder.setColor(Color.pink);
 

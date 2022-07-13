@@ -20,11 +20,10 @@ public class Main extends ListenerAdapter {
     public static boolean logging = true;
 
     public static boolean catModule = true;
-    public static boolean managementModule = true;
-    public static boolean mathModule = true;
-    public static boolean standardModule = true;
+    public static boolean managementModule = false;
+    public static boolean standardModule = false;
     public static boolean stealthModule = true;
-    public static boolean toolsModule = true;
+    public static boolean toolsModule = false;
     public static boolean toysModule = true;
 
     private static final Dotenv dotenv = Dotenv.load();
@@ -63,9 +62,10 @@ public class Main extends ListenerAdapter {
 
             if (!shh) {
                 if (catModule) new Cat(event);
+                if (toysModule) new Toys(event);
+
                 if (standardModule) new Standard(event);
                 if (toolsModule) new Tools(event);
-                if (toysModule) new Toys(event);
                 if (managementModule) new Management(event);
             }
             if (stealthModule) new Stealth(event);
@@ -136,7 +136,6 @@ public class Main extends ListenerAdapter {
                 event.getMessage().reply(
                         "```cat        " + catModule + "\n" +
                                 "management " + managementModule + "\n" +
-                                "math       " + mathModule + "\n" +
                                 "standard   " + standardModule + "\n" +
                                 "stealth    " + stealthModule + "\n" +
                                 "tools      " + toolsModule + "\n" +
@@ -146,7 +145,6 @@ public class Main extends ListenerAdapter {
                 switch (message) {
                     case "cat" : catModule = !catModule; break;
                     case "management" : managementModule = !managementModule; break;
-                    case "math" : mathModule = !mathModule; break;
                     case "standard" : standardModule = !standardModule; break;
                     case "stealth" : stealthModule = !stealthModule; break;
                     case "tools" : toolsModule = !toolsModule; break;
