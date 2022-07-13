@@ -92,8 +92,8 @@ public class Main extends ListenerAdapter {
                     tools.giveMessageCommand(event);
                 }
             }
-            if (managementModule){
-                if(content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlash")){
+            if (managementModule && event.getAuthor().getId().contains(moss)) {
+                if(content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlash")) {
                     management.updateSlashCommands(event);
                 }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlashGlobal")) {
                     management.updateSlashCommandsGlobal(event);
