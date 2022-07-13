@@ -1,5 +1,6 @@
 package bot.modules;
 
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.File;
@@ -11,42 +12,38 @@ import static bot.main.Main.getGuildPrefix;
 import static bot.main.Main.looigData;
 
 public class Tools {
-    public Tools (MessageReceivedEvent event){
-        rollDiceCommand(event);
+    public Tools(MessageReceivedEvent event) {
         messageSaving(event);
-        askLooigCommand(event);
-        flipACoinCommand(event);
+    }
+
+    public Tools(SlashCommandInteractionEvent event) {
+        switch (event.getSubcommandName()) {
+            case "dice":
+                rollDiceCommand(event);
+                break;
+            case "coinflip":
+                flipACoinCommand(event);
+                break;
+            case "asklooig":
+                askLooigCommand(event);
+                break;
+        }
     }
 
 
-    public void rollDiceCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.equalsIgnoreCase(getGuildPrefix(event) + "dice")) {
-            event.getMessage().reply("You got " + ((int) (Math.random() * (6 - 1 + 1)) + 1) + ".").mentionRepliedUser(false).queue();
+    public void rollDiceCommand(SlashCommandInteractionEvent event) {
+        if (event.getOption("d") == null) {
+            event.reply("d6: " + ((int) (Math.random() * (6 - 1 + 1)) + 1)).queue();
         } else {
-            if (content.contains(getGuildPrefix(event) + "dice")) {
-                new Thread(() -> {
-                    event.getChannel().sendTyping().complete();
-                }).start();
-                try {
-                    int maxValue = Integer.parseInt(content.substring((getGuildPrefix(event) + "dice ").length()));
-                    event.getMessage().reply("You got " + ((int) (Math.random() * (maxValue - 1 + 1)) + 1) + ".").mentionRepliedUser(false).queue();
-                } catch (NumberFormatException e) {
-                    event.getMessage().reply("You got " + ((int) (Math.random() * (6 - 1 + 1)) + 1) + ".").mentionRepliedUser(false).queue();
-                }
-            }
-
+            int maxValue = event.getOption("d").getAsInt();
+            event.reply("`d" + maxValue + ":` " + ((int) (Math.random() * (maxValue - 1 + 1)) + 1)).queue();
         }
     }
 
-    public void flipACoinCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.equalsIgnoreCase(getGuildPrefix(event) + "coinflip") ||
-                content.equalsIgnoreCase(getGuildPrefix(event) + "coin")) {
-            String response = "tails";
-            if(Math.random()<0.5) response = "heads";
-            event.getMessage().reply(response).mentionRepliedUser(false).queue();
-        }
+    public void flipACoinCommand(SlashCommandInteractionEvent event) {
+        String response = "tails";
+        if (Math.random() < 0.5) response = "heads";
+        event.reply(response).mentionRepliedUser(false).queue();
     }
 
     private void messageSaving(MessageReceivedEvent event) {
@@ -81,35 +78,28 @@ public class Tools {
         }
     }
 
-    public void askLooigCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "8ball")
-                || content.contains(getGuildPrefix(event) + "8Ball")
-                || content.contains(getGuildPrefix(event) + "ohMagicConchShell")
-                || content.contains(getGuildPrefix(event) + "askLooig")) {
+    public void askLooigCommand(SlashCommandInteractionEvent event) {
+        String[] m = {
+                "Yes",
+                "Absolutely",
+                "Possibly",
+                "You're hot ( ͡° ͜ʖ ͡°)",
+                "It will pass",
+                "Count on it",
+                "No doubt",
+                "Maybe",
+                "Act now",
+                "Very likely",
+                "Bet on it",
+                "Can't say",
+                "No",
+                "Go for it",
+                "Ask Again",
+                "Odds aren't good"
+        };
 
-            String[] m = {
-                    "Yes",
-                    "Absolutely",
-                    "Possibly",
-                    "You're hot ( ͡° ͜ʖ ͡°)",
-                    "It will pass",
-                    "Count on it",
-                    "No doubt",
-                    "Maybe",
-                    "Act now",
-                    "Very likely",
-                    "Bet on it",
-                    "Can't say",
-                    "No",
-                    "Go for it",
-                    "Ask Again",
-                    "Odds aren't good"
-            };
+        int v = ((int) (Math.random() * (m.length - 1)) + 1);
 
-            int v = ((int) (Math.random() * (m.length - 1)) + 1);
-
-            event.getMessage().reply(m[v]).mentionRepliedUser(false).queue();
-        }
+        event.reply("`Q:` " + event.getOption("q").getAsString() + "\n`A:` " + m[v] ).queue();
     }
 }

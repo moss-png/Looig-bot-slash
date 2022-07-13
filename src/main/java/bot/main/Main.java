@@ -1,21 +1,16 @@
 package bot.main;
 
 import bot.modules.*;
-import bot.modules.unused.MM2;
-import bot.modules.unused.Moderator;
-import bot.modules.unused.Unused;
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import okhttp3.internal.Internal;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main extends ListenerAdapter {
@@ -27,13 +22,10 @@ public class Main extends ListenerAdapter {
     public static boolean catModule = true;
     public static boolean managementModule = true;
     public static boolean mathModule = true;
-    public static boolean mm2Module = false;
-    public static boolean moderatorModule = false;
     public static boolean standardModule = true;
     public static boolean stealthModule = true;
     public static boolean toolsModule = true;
     public static boolean toysModule = true;
-    public static boolean unusedModule = false;
 
     private static final Dotenv dotenv = Dotenv.load();
     public static String catFolder = dotenv.get("CAT_FOLDER");
@@ -75,10 +67,6 @@ public class Main extends ListenerAdapter {
                 if (toolsModule) new Tools(event);
                 if (toysModule) new Toys(event);
                 if (managementModule) new Management(event);
-                if (mathModule) new MathStuff(event);
-                if (mm2Module) new MM2(event);
-                if (moderatorModule) new Moderator(event);
-                if (unusedModule) new Unused(event);
             }
             if (stealthModule) new Stealth(event);
 
@@ -97,29 +85,23 @@ public class Main extends ListenerAdapter {
         if (event.getName().equals("yeah")) {
             event.reply("yeah").queue();
         }else{
-//            switch (event.getName()){
-//                case "funnycat":
-//                    new Cat(event);
-//                    break;
-//                case "management":
-//                    new Management(event);
-//                    break;
-//                case "internal":
-//                    new BotInternal(event);
-//                    break;
-//                case "math":
-//                    new MathStuff(event);
-//                    break;
-//                case "standard":
-//                    new Standard(event);
-//                    break;
-//                case "tools":
-//                    new Tools(event);
-//                    break;
-//                default:
-//                    break;
-//            }
-            new Cat(event);
+            switch (event.getName()){
+                case "funnycat":
+                    new Cat(event);
+                    break;
+                case "management":
+                    new Management(event);
+                    break;
+                case "math":
+                    new MathStuff(event);
+                    break;
+                case "ping":
+                    new Standard(event);
+                    break;
+                case "tools":
+                    new Tools(event);
+                    break;
+            }
         }
     }
 
@@ -155,26 +137,20 @@ public class Main extends ListenerAdapter {
                         "```cat        " + catModule + "\n" +
                                 "management " + managementModule + "\n" +
                                 "math       " + mathModule + "\n" +
-                                "mm2        " + mm2Module + "\n" +
-                                "moderator  " + moderatorModule + "\n" +
                                 "standard   " + standardModule + "\n" +
                                 "stealth    " + stealthModule + "\n" +
                                 "tools      " + toolsModule + "\n" +
-                                "toys       " + toysModule + "\n" +
-                                "unused     " + unusedModule + "```").mentionRepliedUser(false).queue();
+                                "toys       " + toysModule + "\n" + "```").mentionRepliedUser(false).queue();
             }else if(content.contains(getGuildPrefix(event) + "toggle ")){
                 String message = content.substring((getGuildPrefix(event) + "toggle ").length());
                 switch (message) {
                     case "cat" : catModule = !catModule; break;
                     case "management" : managementModule = !managementModule; break;
                     case "math" : mathModule = !mathModule; break;
-                    case "mm2" : mm2Module = !mm2Module; break;
-                    case "moderator" : moderatorModule = !moderatorModule; break;
                     case "standard" : standardModule = !standardModule; break;
                     case "stealth" : stealthModule = !stealthModule; break;
                     case "tools" : toolsModule = !toolsModule; break;
                     case "toys" : toysModule = !toysModule; break;
-                    case "unused" : unusedModule = !unusedModule; break;
                 }
                 event.getMessage().addReaction("\uD83C\uDD97").queue();
             }

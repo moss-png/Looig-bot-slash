@@ -26,7 +26,14 @@ public class Cat {
     }
 
     public Cat(SlashCommandInteractionEvent event) {
-        funnyCatCommand(event);
+        switch (event.getSubcommandName()) {
+            case "get":
+                funnyCatGetCommand(event);
+                break;
+            case "count":
+                funnyCatCountCommand(event);
+                break;
+        }
     }
 
     public void funnyCatCommand(MessageReceivedEvent event) {
@@ -71,7 +78,7 @@ public class Cat {
                 }
             } else if (content.contains(getGuildPrefix(event) + "funnycat save")) {
                 event.getMessage().reply("sorry you can't use that").mentionRepliedUser(false).queue();
-            } else if(content.contains(getGuildPrefix(event) + "funnycat")){
+            } else if (content.contains(getGuildPrefix(event) + "funnycat")) {
                 event.getMessage().reply("try slash commands").mentionRepliedUser(false).queue();
             }
         } catch (NullPointerException e) {
@@ -79,66 +86,63 @@ public class Cat {
         }
     }
 
-    public void funnyCatCommand(SlashCommandInteractionEvent event){
-
-        if(event.getName().equals("funnycat")){
-            event.deferReply().queue();
-            try{
-                File targetDir = new File(catFolder);
-                int max = Objects.requireNonNull(targetDir.list()).length - 1;
-                if (max == -1) {
-                    event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
+    public void funnyCatGetCommand(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+        try {
+            File targetDir = new File(catFolder);
+            int max = Objects.requireNonNull(targetDir.list()).length - 1;
+            if (max == -1) {
+                event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
+            } else {
+                if (event.getOption("id") == null) {
+                    int index = (int) (Math.random() * (max + 1));
+                    if (logging) {
+                        System.out.println(index + "");
+                    }
+                    String file = getCatFromIndex(index);
+                    event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
+                            .addFile(new File(catFolder + "/" + file)).queue();
                 } else {
-                    if(event.getOption("cat") == null){
-                        int index = (int) (Math.random() * (max + 1));
+                    try {
+                        String file = getCatFromIndex(event.getOption("cat").getAsInt());
                         if (logging) {
-                            System.out.println(index + "");
+                            System.out.println(event.getOption("cat").getAsInt());
                         }
-                        String file = getCatFromIndex(index);
                         event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
                                 .addFile(new File(catFolder + "/" + file)).queue();
-                    }else{
-                        try {
-                            String file = getCatFromIndex(event.getOption("cat").getAsInt());
-                            if (logging){
-                                System.out.println(event.getOption("cat").getAsInt());
-                            }
-                            event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
-                                    .addFile(new File(catFolder + "/" + file)).queue();
-                        } catch (IndexOutOfBoundsException e) {
-                            event.getHook().sendMessage("couldn't find the cat specified").queue();
-                        } catch (NumberFormatException e) {
-                            event.getHook().sendMessage("what do you want from me").queue();
-                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        event.getHook().sendMessage("couldn't find the cat specified").queue();
+                    } catch (NumberFormatException e) {
+                        event.getHook().sendMessage("what do you want from me").queue();
                     }
                 }
-            }catch(NullPointerException e){
-                event.getHook().sendMessage("Couldn't access target directory").queue();
             }
+        } catch (NullPointerException e) {
+            event.getHook().sendMessage("Couldn't access target directory").queue();
         }
+    }
 
-        if(event.getName().equals("funnycatcount")){
-            event.deferReply().queue();
-            try {
-                File targetDir = new File(catFolder);
-                int max = Objects.requireNonNull(targetDir.list()).length - 1;
-                if (max == -1) {
-                    event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
-                }else{
-                    int count = Objects.requireNonNull(new File(catFolder).list()).length;
-                    long size = 0;
-                    File[] files = new File(catFolder).listFiles();
-                    for (int i = 0; i < count; i++) {
-                        assert files != null;
-                        size += files[i].length();
-                    }
-                    double sizeMB = size / 1000000.0;
-                    event.getHook().sendMessage(count + " files taking up " + sizeMB + " megabytes of space").queue();
+    public void funnyCatCountCommand(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+        try {
+            File targetDir = new File(catFolder);
+            int max = Objects.requireNonNull(targetDir.list()).length - 1;
+            if (max == -1) {
+                event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
+            } else {
+                int count = Objects.requireNonNull(new File(catFolder).list()).length;
+                long size = 0;
+                File[] files = new File(catFolder).listFiles();
+                for (int i = 0; i < count; i++) {
+                    assert files != null;
+                    size += files[i].length();
                 }
-
-            }catch(NullPointerException e){
-                event.getHook().sendMessage("Couldn't access target directory").queue();
+                double sizeMB = size / 1000000.0;
+                event.getHook().sendMessage(count + " files taking up " + sizeMB + " megabytes of space").queue();
             }
+
+        } catch (NullPointerException e) {
+            event.getHook().sendMessage("Couldn't access target directory").queue();
         }
     }
 

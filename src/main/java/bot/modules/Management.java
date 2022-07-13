@@ -24,13 +24,12 @@ public class Management {
                     Commands.slash("yeah", "yeah"),
                     Commands.slash("funnycat", "get a funny cat")
                             .addSubcommands(
-                                    new SubcommandData("random","random cat"),
-                                    new SubcommandData("specific", "pick a number and see where it leads")
-                                            .addOption(OptionType.INTEGER,"id","numerical id of the cat",true),
+                                    new SubcommandData("get","posts funny cat image/video")
+                                            .addOption(OptionType.INTEGER,"id","numerical id of the cat, random if left blank"),
                                     new SubcommandData("count","get the total count and filesize of all cats")),
                     Commands.slash("management","internal")
                             .addSubcommands(new SubcommandData("logging","on at launch")
-                                .addOption(OptionType.BOOLEAN,"toggle","logging yay/nay?",true)),
+                                .addOption(OptionType.BOOLEAN,"toggle","logging yay/nay?")),
                     Commands.slash("math","left-overs from high school :nauseated_face:")
                             .addSubcommands(
                                     new SubcommandData("gcd","greatest common divisor")
@@ -40,13 +39,15 @@ public class Management {
                                             .addOption(OptionType.INTEGER,"a","first number",true)
                                             .addOption(OptionType.INTEGER,"b","second number",true),
                                     new SubcommandData("isprime","is the provided number prime or not")
-                                            .addOption(OptionType.INTEGER, "x", "the number in question")),
+                                            .addOption(OptionType.INTEGER, "x", "the number in question", true)),
                     Commands.slash("ping","get the ping"),
                     Commands.slash("tools","every day stuff")
                             .addSubcommands(
                                     new SubcommandData("dice","roll a die")
                                             .addOption(OptionType.INTEGER,"d","if left blank a d6 will be used"),
-                                    new SubcommandData("coinflip", "flip a coin"))
+                                    new SubcommandData("coinflip", "flip a coin (riveting!)"),
+                                    new SubcommandData("asklooig", "magic 8ball type beat")
+                                            .addOption(OptionType.STRING, "q","the question in question", true))
             };
 
 
@@ -55,11 +56,12 @@ public class Management {
         updateSlashCommands(event);
         deleteSlashCommands(event);
         updateSlashCommandsGlobal(event);
-        loggingCommand(event);
     }
 
     public Management(SlashCommandInteractionEvent event){
-        //switch (event.getOption("command").getAsString())
+        if ("logging".equals(event.getSubcommandName())) {
+            loggingCommand(event);
+        }
     }
 
     public void prefixCommand(MessageReceivedEvent event) {
@@ -142,19 +144,23 @@ public class Management {
         }
     }
 
-    public void loggingCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.equalsIgnoreCase(getGuildPrefix(event) + "logging Off") && event.getAuthor().getId().contains(moss)) {
-            logging = false;
-            System.out.println("logging is now off");
-            event.getMessage().reply("message logging has been turned off").mentionRepliedUser(false).queue();
-        } else if (content.equalsIgnoreCase(getGuildPrefix(event) + "logging On") && event.getAuthor().getId().contains(moss)) {
-            logging = true;
-            System.out.println("logging is now back on");
-            event.getMessage().reply("message logging has been turned on").mentionRepliedUser(false).queue();
-        } else if (content.equalsIgnoreCase(getGuildPrefix(event) + "logging status")) {
-            event.getMessage().reply("message logging is set to " + logging).mentionRepliedUser(false).queue();
+    public void loggingCommand(SlashCommandInteractionEvent event) {
+        if (!event.getUser().getId().equals(moss)) {
+            event.reply("you don't get to do that").queue();
+        } else {
+            try{
+                if (event.getOption("toggle").getAsBoolean()) {
+                    logging = true;
+                    System.out.println("logging is now on");
+                    event.reply("message logging has been turned on").queue();
+                } else {
+                    logging = false;
+                    System.out.println("logging is now off");
+                    event.reply("message logging has been turned off").queue();
+                }
+            }catch (NullPointerException e){
+                event.reply("message logging is set to " + logging).queue();
+            }
         }
     }
-
 }

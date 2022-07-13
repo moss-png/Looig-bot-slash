@@ -1,8 +1,9 @@
 package bot.modules;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.awt.*;
 import java.time.Instant;
@@ -14,8 +15,11 @@ public class Standard {
         helpCommand(event);
         mentionCommand(event);
         todoCommand(event);
-        pingCommand(event);
         changelogCommand(event);
+    }
+
+    public Standard(SlashCommandInteractionEvent event) {
+        pingCommand(event);
     }
 
     public void helpCommand(MessageReceivedEvent event) {
@@ -23,7 +27,7 @@ public class Standard {
         if (content.contains(getGuildPrefix(event) + "help") || content.contains(getGuildPrefix(event) + "commands")) {
             EmbedBuilder builder = new EmbedBuilder();
 
-            builder.setTitle("Hi I'm Looig (VER. 0.10.2)\n");
+            builder.setTitle("Hi I'm Looig (VER. 0.10.5)\n");
             builder.setDescription("suck it ;)");
             builder.setFooter("Made with \u2764 by moss#0059", null);
             builder.setColor(Color.pink);
@@ -52,21 +56,18 @@ public class Standard {
         }
     }
 
-    public void pingCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "ping")) {
-            Instant start = Instant.now();
-            Message t = event.getMessage().reply("pong").mentionRepliedUser(false).complete();
-            long end = Instant.now().toEpochMilli() - start.toEpochMilli();
-            long difference = end - event.getJDA().getGatewayPing();
-            String m = "JDA delay:\n|**" + event.getJDA().getGatewayPing() + "**ms\n"
-                    + "bot delay:\n|**" + difference + "**ms\n"
-                    + "for a total ping of:\n|**" + end + "**ms";
-            EmbedBuilder b = new EmbedBuilder();
-            b.setColor(Color.PINK);
-            b.setDescription(m);
-            t.editMessageEmbeds(b.build()).mentionRepliedUser(false).complete();
-        }
+    public void pingCommand(SlashCommandInteractionEvent event) {
+        Instant start = Instant.now();
+        InteractionHook t = event.reply("pong").complete();
+        long end = Instant.now().toEpochMilli() - start.toEpochMilli();
+        long difference = end - event.getJDA().getGatewayPing();
+        String m = "JDA delay:\n|**" + event.getJDA().getGatewayPing() + "**ms\n"
+                + "bot delay:\n|**" + difference + "**ms\n"
+                + "for a total ping of:\n|**" + end + "**ms";
+        EmbedBuilder b = new EmbedBuilder();
+        b.setColor(Color.PINK);
+        b.setDescription(m);
+        t.editOriginalEmbeds(b.build()).complete();
     }
 
     public void changelogCommand(MessageReceivedEvent event) {
