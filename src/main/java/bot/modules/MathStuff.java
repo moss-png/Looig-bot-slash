@@ -33,7 +33,7 @@ public class MathStuff {
 
             event.reply("`gcd "+ event.getOption("a").getAsString() + " " + event.getOption("b").getAsString() + ":` " + a).queue();
         } catch (ArithmeticException e) {
-            event.getChannel().sendMessage("the fact that discord considers both of these two numbers integers, concerns me").queue();
+            event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
     }
 
@@ -54,7 +54,7 @@ public class MathStuff {
 
             event.getChannel().sendMessage("`lcm "+ event.getOption("a").getAsString() + " " + event.getOption("b").getAsString() + ":` " + lcm).queue();
         } catch (ArithmeticException e) {
-            event.getChannel().sendMessage("the fact that discord considers both of these two numbers integers, concerns me").queue();
+            event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
 
     }
@@ -68,7 +68,7 @@ public class MathStuff {
             }
             event.reply("`isPrime " + number + ":` " + (i == number)).queue();
         } catch (ArithmeticException e) {
-            event.getChannel().sendMessage("the fact that discord somehow considers this number an integer, concerns me").queue();
+            event.reply("the fact that discord somehow considers this number an integer, concerns me").queue();
         }
 
     }
