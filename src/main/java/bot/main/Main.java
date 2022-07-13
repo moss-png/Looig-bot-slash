@@ -123,7 +123,7 @@ public class Main extends ListenerAdapter {
                 case "funnycat":
                     new Cat(event);
                     break;
-                case "management":
+                case "internal":
                     new Management(event);
                     break;
                 case "math":
