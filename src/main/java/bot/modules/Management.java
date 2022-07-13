@@ -1,8 +1,8 @@
 package bot.modules;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
+//import net.dv8tion.jda.api.EmbedBuilder;
+//import net.dv8tion.jda.api.Permission;
+//import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -10,11 +10,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-
-import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Objects;
+//import java.awt.*;
+//import java.io.FileNotFoundException;
+//import java.io.PrintWriter;
+//import java.util.Objects;
 
 import static bot.main.Main.*;
 
