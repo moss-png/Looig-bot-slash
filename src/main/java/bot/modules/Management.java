@@ -114,30 +114,17 @@ public class Management {
 
 
     public void updateSlashCommands(MessageReceivedEvent event){
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "updateSlash") &&
-                event.getAuthor().getId().contains(moss)) {
-            event.getGuild().updateCommands().addCommands(commands).queue();
-
-        }
+        event.getGuild().updateCommands().addCommands(commands).queue();
     }
 
     public void deleteSlashCommands(MessageReceivedEvent event){
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "deleteSlash") &&
-                event.getAuthor().getId().contains(moss)) {
-            for(Command command : event.getGuild().retrieveCommands().complete()) {
-                event.getGuild().deleteCommandById(command.getId()).queue();
-            }
+        for(Command command : event.getGuild().retrieveCommands().complete()) {
+            event.getGuild().deleteCommandById(command.getId()).queue();
         }
     }
 
     public void updateSlashCommandsGlobal(MessageReceivedEvent event){
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "updateSlashGlobal") &&
-                event.getAuthor().getId().contains(moss)) {
-            event.getJDA().updateCommands().addCommands(commands).queue();
-        }
+        event.getJDA().updateCommands().addCommands(commands).queue();
     }
 
     public void loggingCommand(SlashCommandInteractionEvent event) {
