@@ -13,12 +13,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import static bot.main.Main.getGuildPrefix;
-
 public class Main extends ListenerAdapter {
 
     public static boolean primed = false;
-    public static boolean logging = true;
+    public static boolean logging = false;
 
     public static boolean catModule = true;
     public static boolean managementModule = false;
