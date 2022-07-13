@@ -28,9 +28,9 @@ public class Management {
                                     new SubcommandData("get","posts funny cat image/video")
                                             .addOption(OptionType.INTEGER,"id","numerical id of the cat, random if left blank"),
                                     new SubcommandData("count","get the total count and filesize of all cats")),
-                    Commands.slash("management","internal")
-                            .addSubcommands(new SubcommandData("logging","on at launch")
-                                .addOption(OptionType.BOOLEAN,"toggle","logging yay/nay?")),
+                    Commands.slash("internal","internal bot settings")
+                            .addSubcommands(new SubcommandData("logging","off at launch, used for debugging only")
+                                .addOption(OptionType.BOOLEAN,"toggle","yay/nay?")),
                     Commands.slash("math","left-overs from high school :nauseated_face:")
                             .addSubcommands(
                                     new SubcommandData("gcd","greatest common divisor")
@@ -52,12 +52,6 @@ public class Management {
             };
 
 
-    public Management(MessageReceivedEvent event){
-        updateSlashCommands(event);
-        deleteSlashCommands(event);
-        updateSlashCommandsGlobal(event);
-    }
-
     public Management(SlashCommandInteractionEvent event){
         if ("logging".equals(event.getSubcommandName())) {
             loggingCommand(event);
@@ -67,57 +61,57 @@ public class Management {
     public Management(){}
 
     //no thank you goodbye
-    public void prefixCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "changePrefix")) {
-
-            try {
-                if (Objects.requireNonNull(event.getMessage().getMember()).hasPermission(Permission.ADMINISTRATOR)) {
-
-                    Guild guild = event.getGuild();
-                    try {
-                        String myPrefix = getGuildPrefix(event);
-                        PrintWriter writer = new PrintWriter(looigData + guild.getId() + "_Prefix.txt");
-                        writer.println(event.getMessage().getContentRaw().substring((myPrefix + "changePrefix ").length()));
-                        writer.close();
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setTitle("You successfully changed the prefix to `" + getGuildPrefix(event) + "`");
-                        builder.setColor(Color.GREEN);
-                        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
-                    } catch (FileNotFoundException e) {
-                        System.err.println("That shouldn't have happened");
-                    }
-                } else {
-                    event.getMessage().reply("you need admin permissions to do that").mentionRepliedUser(false).queue();
-                }
-            } catch (NullPointerException e) {
-                event.getMessage().reply("sorry you can't change the prefix in a direct message").mentionRepliedUser(false).queue();
-            }
-        }
-        if (content.contains("<@!" + looig + "> changePrefix")) {
-            try {
-                if (Objects.requireNonNull(event.getMessage().getMember()).hasPermission(Permission.ADMINISTRATOR)) {
-
-                    Guild guild = event.getGuild();
-                    try {
-                        PrintWriter writer = new PrintWriter(looigData + guild.getId() + "_Prefix.txt");
-                        writer.println(event.getMessage().getContentRaw().substring(("<@!" + looig + "> changePrefix ").length()));
-                        writer.close();
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setTitle("You successfully changed the prefix to `" + getGuildPrefix(event) + "`");
-                        builder.setColor(Color.GREEN);
-                        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
-                    } catch (FileNotFoundException e) {
-                        System.err.println("That shouldn't have happened");
-                    }
-                } else {
-                    event.getMessage().reply("you need admin permissions to do that").mentionRepliedUser(false).queue();
-                }
-            } catch (NullPointerException e) {
-                event.getMessage().reply("sorry you can't change the prefix in a direct message").mentionRepliedUser(false).queue();
-            }
-        }
-    }
+//    public void prefixCommand(MessageReceivedEvent event) {
+//        String content = event.getMessage().getContentRaw();
+//        if (content.contains(getGuildPrefix(event) + "changePrefix")) {
+//
+//            try {
+//                if (Objects.requireNonNull(event.getMessage().getMember()).hasPermission(Permission.ADMINISTRATOR)) {
+//
+//                    Guild guild = event.getGuild();
+//                    try {
+//                        String myPrefix = getGuildPrefix(event);
+//                        PrintWriter writer = new PrintWriter(looigData + guild.getId() + "_Prefix.txt");
+//                        writer.println(event.getMessage().getContentRaw().substring((myPrefix + "changePrefix ").length()));
+//                        writer.close();
+//                        EmbedBuilder builder = new EmbedBuilder();
+//                        builder.setTitle("You successfully changed the prefix to `" + getGuildPrefix(event) + "`");
+//                        builder.setColor(Color.GREEN);
+//                        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
+//                    } catch (FileNotFoundException e) {
+//                        System.err.println("That shouldn't have happened");
+//                    }
+//                } else {
+//                    event.getMessage().reply("you need admin permissions to do that").mentionRepliedUser(false).queue();
+//                }
+//            } catch (NullPointerException e) {
+//                event.getMessage().reply("sorry you can't change the prefix in a direct message").mentionRepliedUser(false).queue();
+//            }
+//        }
+//        if (content.contains("<@!" + looig + "> changePrefix")) {
+//            try {
+//                if (Objects.requireNonNull(event.getMessage().getMember()).hasPermission(Permission.ADMINISTRATOR)) {
+//
+//                    Guild guild = event.getGuild();
+//                    try {
+//                        PrintWriter writer = new PrintWriter(looigData + guild.getId() + "_Prefix.txt");
+//                        writer.println(event.getMessage().getContentRaw().substring(("<@!" + looig + "> changePrefix ").length()));
+//                        writer.close();
+//                        EmbedBuilder builder = new EmbedBuilder();
+//                        builder.setTitle("You successfully changed the prefix to `" + getGuildPrefix(event) + "`");
+//                        builder.setColor(Color.GREEN);
+//                        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
+//                    } catch (FileNotFoundException e) {
+//                        System.err.println("That shouldn't have happened");
+//                    }
+//                } else {
+//                    event.getMessage().reply("you need admin permissions to do that").mentionRepliedUser(false).queue();
+//                }
+//            } catch (NullPointerException e) {
+//                event.getMessage().reply("sorry you can't change the prefix in a direct message").mentionRepliedUser(false).queue();
+//            }
+//        }
+//    }
 
 
     public void updateSlashCommands(MessageReceivedEvent event){
