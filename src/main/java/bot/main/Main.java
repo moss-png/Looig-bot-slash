@@ -13,9 +13,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import static bot.main.Main.getGuildPrefix;
+
 public class Main extends ListenerAdapter {
 
-    public static boolean shh = false;
     public static boolean primed = false;
     public static boolean logging = true;
 
@@ -34,7 +35,12 @@ public class Main extends ListenerAdapter {
     public static String looig = dotenv.get("LOOIG");
     public static String looigData = dotenv.get("LOOIG_DATA_PATH");
 
-
+    public Cat cat = new Cat();
+    public Toys toys = new Toys();
+    public Standard standard = new Standard();
+    public Tools tools = new Tools();
+    public Management management = new Management();
+    public Stealth stealth = new Stealth();
 
     public static void main(String[] args) throws LoginException {
         String token = dotenv.get("TOKEN");
@@ -60,18 +66,48 @@ public class Main extends ListenerAdapter {
             }
             System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Raspbian Chromium/74.0.3729.157 Chrome/74.0.3729.157 Safari/537.36");
 
-            if (!shh) {
-                if (catModule) new Cat(event);
-                if (toysModule) new Toys(event);
-
-                if (standardModule) new Standard(event);
-                if (toolsModule) new Tools(event);
-                if (managementModule) new Management(event);
+            if (catModule) {
+                if (content.equalsIgnoreCase("gwa gwa")) {
+                    cat.gwagwaCommand(event);
+                } else if (content.equalsIgnoreCase(getGuildPrefix(event) + "deleteLast") &&
+                        (event.getAuthor().getId().contains(moss))) {
+                    cat.deleteLastCat(event);
+                } else {
+                    cat.funnyCatCommand(event);
+                }
             }
-            if (stealthModule) new Stealth(event);
+            if (standardModule) {
+                if(content.contains(getGuildPrefix(event) + "help") || content.contains(getGuildPrefix(event) + "commands")){
+                    standard.helpCommand(event);
+                } else if (content.equalsIgnoreCase("<@!" + looig + ">")) {
+                    standard.mentionCommand(event);
+                } else if (content.contains(getGuildPrefix(event) + "todo")){
+                    standard.todoCommand(event);
+                } else if (content.equalsIgnoreCase(getGuildPrefix(event) + "changelog")){
+                    standard.changelogCommand(event);
+                }
+            }
+            if (toolsModule) {
+                if(content.contains(getGuildPrefix(event) + "saveMessage")){
+                    tools.saveMessageCommand(event);
+                } else if (content.contains(getGuildPrefix(event) + "giveMessage")) {
+                    tools.giveMessageCommand(event);
+                }
+            }
+            if (managementModule){
+                if(content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlash")){
+                    management.updateSlashCommands(event);
+                }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlashGlobal")) {
+                    management.updateSlashCommandsGlobal(event);
+                }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "deleteSlash")) {
+                    management.deleteSlashCommands(event);
+                }
+            }
+
+            if (toysModule) toys.trigger(event);
+            if (stealthModule) stealth.trigger(event);
 
             toggle(event);
-            shh(event);
         } else {
             if (logging) {
                 System.out.println(">>> " + content);
@@ -112,20 +148,6 @@ public class Main extends ListenerAdapter {
             return scnr.nextLine();
         } catch (FileNotFoundException | NullPointerException | IllegalStateException e) {
             return ">";
-        }
-    }
-
-    public void shh(MessageReceivedEvent event) {
-        if (event.getAuthor().getId().contains(moss)) {
-            String content = event.getMessage().getContentRaw();
-            if (content.contains(getGuildPrefix(event) + "shh")) {
-                shh = !shh;
-                if(shh){
-                    event.getMessage().addReaction("\uD83D\uDCA4").queue();
-                }else{
-                    event.getMessage().addReaction("\u2757").queue();
-                }
-            }
         }
     }
 

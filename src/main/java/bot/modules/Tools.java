@@ -12,9 +12,8 @@ import static bot.main.Main.getGuildPrefix;
 import static bot.main.Main.looigData;
 
 public class Tools {
-    public Tools(MessageReceivedEvent event) {
-        messageSaving(event);
-    }
+
+    public Tools(){}
 
     public Tools(SlashCommandInteractionEvent event) {
         switch (event.getSubcommandName()) {
@@ -29,7 +28,6 @@ public class Tools {
                 break;
         }
     }
-
 
     public void rollDiceCommand(SlashCommandInteractionEvent event) {
         if (event.getOption("d") == null) {
@@ -46,35 +44,27 @@ public class Tools {
         event.reply(response).mentionRepliedUser(false).queue();
     }
 
-    private void messageSaving(MessageReceivedEvent event) {
+    public void saveMessageCommand(MessageReceivedEvent event) {
         try {
-            if (event.getMessage().getContentRaw().equalsIgnoreCase(getGuildPrefix(event) + "saveMessage")) {
-                new Thread(() -> {
-                    event.getChannel().sendTyping().complete();
-                }).start();
-                event.getMessage().reply("Are you kidding me? There's nothing to save in there.").mentionRepliedUser(false).queue();
-            } else {
-                if (event.getMessage().getContentRaw().contains(getGuildPrefix(event) + "saveMessage") || event.getMessage().getContentRaw().contains(getGuildPrefix(event) + "savemessage")) {
-                    new Thread(() -> {
-                        event.getChannel().sendTyping().complete();
-                    }).start();
-                    PrintWriter writer = new PrintWriter(looigData + event.getAuthor().getName() + ".txt");
-                    writer.println(event.getMessage().getContentDisplay().substring((getGuildPrefix(event) + "saveMessage ").length()));
-                    writer.close();
-                    event.getMessage().reply("*saved*").mentionRepliedUser(false).queue();
-                }
-
-                if (event.getMessage().getContentRaw().contains(getGuildPrefix(event) + "giveMessage") || event.getMessage().getContentRaw().contains(getGuildPrefix(event) + "givemessage")) {
-                    new Thread(() -> {
-                        event.getChannel().sendTyping().complete();
-                    }).start();
-                    File text = new File(looigData + event.getAuthor().getName() + ".txt");
-                    Scanner scnr = new Scanner(text);
-                    event.getMessage().reply(scnr.nextLine()).mentionRepliedUser(false).queue();
-                }
-            }
+            String message = event.getMessage().getContentDisplay().substring((getGuildPrefix(event) + "saveMessage ").length());
+            PrintWriter writer = new PrintWriter(looigData + event.getAuthor().getName() + ".txt");
+            writer.println(message);
+            writer.close();
+            event.getMessage().reply("*saved*").mentionRepliedUser(false).queue();
         } catch (FileNotFoundException | IllegalStateException e) {
-            System.err.println("I messed up papa");
+            event.getMessage().reply("couldn't access the message directory").mentionRepliedUser(false).queue();
+        } catch (StringIndexOutOfBoundsException e){
+            event.getMessage().reply("something went wrong. Did you provide a message?").mentionRepliedUser(false).queue();
+        }
+    }
+
+    public void giveMessageCommand(MessageReceivedEvent event){
+        try{
+            File text = new File(looigData + event.getAuthor().getName() + ".txt");
+            Scanner scnr = new Scanner(text);
+            event.getMessage().reply(scnr.nextLine()).mentionRepliedUser(false).queue();
+        }catch (FileNotFoundException e){
+            event.getMessage().reply("something went wrong. Did you maybe try to retrieve your message without saving it first?").mentionRepliedUser(false).queue();
         }
     }
 

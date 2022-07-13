@@ -8,7 +8,10 @@ import static bot.main.Main.getGuildPrefix;
 import static bot.main.Main.*;
 
 public class Stealth {
-    public Stealth(MessageReceivedEvent event){
+
+    public Stealth(){}
+
+    public void trigger(MessageReceivedEvent event){
         makeCheekiHappyCommand(event);
         ghostCommand(event);
         dmDetector(event);

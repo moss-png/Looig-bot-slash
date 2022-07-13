@@ -19,12 +19,6 @@ import static bot.main.Main.*;
 
 public class Cat {
 
-    public Cat(MessageReceivedEvent event) {
-        funnyCatCommand(event);
-        gwagwaCommand(event);
-        deleteLastCat(event);
-    }
-
     public Cat(SlashCommandInteractionEvent event) {
         switch (event.getSubcommandName()) {
             case "get":
@@ -35,6 +29,8 @@ public class Cat {
                 break;
         }
     }
+
+    public Cat(){}
 
     public void funnyCatCommand(MessageReceivedEvent event) {
         try {
@@ -147,47 +143,37 @@ public class Cat {
     }
 
     public void gwagwaCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.equalsIgnoreCase("gwa gwa")) {
-            event.getChannel().sendMessage("https://cta.pet/cats/0000.png").queue();
-        }
+        event.getChannel().sendMessage("https://cta.pet/cats/0000.png").queue();
     }
 
     public void deleteLastCat(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (
-                content.equalsIgnoreCase(getGuildPrefix(event) + "deleteLast") &&
-                        (event.getAuthor().getId().contains(moss))
-        ) {
-            Objects.requireNonNull(Objects.requireNonNull(event.getJDA()
-                                    .getGuildById(astaCult))
-                            .getTextChannelById(funnyCats))
-                    .getHistory().retrievePast(1)
-                    .map(messages -> messages.get(0))
-                    .queue(message -> {
-                        message.delete().queue();
+        Objects.requireNonNull(
+                        Objects.requireNonNull(event.getJDA().getGuildById(astaCult)).getTextChannelById(funnyCats))
+                .getHistory().retrievePast(1)
+                .map(messages -> messages.get(0))
+                .queue(message -> {
+                    message.delete().queue();
 
-                        File directory = new File(catFolder);
-                        File[] files = directory.listFiles(File::isFile);
-                        long lastModifiedTime = Long.MIN_VALUE;
-                        File chosenFile = null;
+                    File directory = new File(catFolder);
+                    File[] files = directory.listFiles(File::isFile);
+                    long lastModifiedTime = Long.MIN_VALUE;
+                    File chosenFile = null;
 
-                        if (files != null) {
-                            for (File file : files) {
-                                if (file.lastModified() > lastModifiedTime) {
-                                    chosenFile = file;
-                                    lastModifiedTime = file.lastModified();
-                                }
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.lastModified() > lastModifiedTime) {
+                                chosenFile = file;
+                                lastModifiedTime = file.lastModified();
                             }
                         }
+                    }
 
-                        assert chosenFile != null;
-                        boolean worked = chosenFile.delete();
-                        if (worked) {
-                            event.getMessage().addReaction("\u2705").queue();
-                        }
-                    });
-        }
+                    assert chosenFile != null;
+                    boolean worked = chosenFile.delete();
+                    if (worked) {
+                        event.getMessage().addReaction("\u2705").queue();
+                    }
+                });
     }
 
 

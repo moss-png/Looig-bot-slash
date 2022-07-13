@@ -19,6 +19,7 @@ import java.util.Objects;
 import static bot.main.Main.*;
 
 public class Management {
+
     private final CommandData[] commands =
             {
                     Commands.slash("yeah", "yeah"),
@@ -52,7 +53,6 @@ public class Management {
 
 
     public Management(MessageReceivedEvent event){
-        prefixCommand(event);
         updateSlashCommands(event);
         deleteSlashCommands(event);
         updateSlashCommandsGlobal(event);
@@ -64,6 +64,9 @@ public class Management {
         }
     }
 
+    public Management(){}
+
+    //no thank you goodbye
     public void prefixCommand(MessageReceivedEvent event) {
         String content = event.getMessage().getContentRaw();
         if (content.contains(getGuildPrefix(event) + "changePrefix")) {

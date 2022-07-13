@@ -10,7 +10,10 @@ import java.util.Objects;
 import static bot.main.Main.*;
 
 public class Toys {
-    public Toys(MessageReceivedEvent event){
+
+    public Toys(){}
+
+    public void trigger(MessageReceivedEvent event){
         loveYouCommand(event);
         trueCommand(event);
         pfpCommand(event);

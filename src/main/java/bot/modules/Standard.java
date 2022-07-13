@@ -11,49 +11,37 @@ import java.time.Instant;
 import static bot.main.Main.*;
 
 public class Standard {
-    public Standard(MessageReceivedEvent event) {
-        helpCommand(event);
-        mentionCommand(event);
-        todoCommand(event);
-        changelogCommand(event);
-    }
 
     public Standard(SlashCommandInteractionEvent event) {
         pingCommand(event);
     }
 
+    public Standard(){}
+
     public void helpCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "help") || content.contains(getGuildPrefix(event) + "commands")) {
-            EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = new EmbedBuilder();
 
-            builder.setTitle("Hi I'm Looig (VER. 0.10.6)\n");
-            builder.setDescription("I ain't writing all that)");
-            builder.setFooter("Made with \u2764 by moss#0059", null);
-            builder.setColor(Color.pink);
+        builder.setTitle("Hi I'm Looig (VER. 0.10.6)\n");
+        builder.setDescription("I ain't writing all that)");
+        builder.setFooter("Made with \u2764 by moss#0059", null);
+        builder.setColor(Color.pink);
 
-            event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
-
-        }
+        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
     }
 
     public void mentionCommand(MessageReceivedEvent event) {
-        if ((event.getMessage().getContentRaw().equals("<@" + looig + ">")) || event.getMessage().getContentRaw().equals("<@!" + looig + ">")) {
-            event.getMessage().reply("yo what up my prefix is `" + getGuildPrefix(event) + "`").mentionRepliedUser(false).queue();
-        }
+        event.getMessage().reply("yo what up my prefix is `" + getGuildPrefix(event) + "`").mentionRepliedUser(false).queue();
     }
 
     public void todoCommand(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "todo")) {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle("To do list:");
-            builder.setDescription("- make code not spaghetti\n");
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setTitle("To do list:");
+        builder.setDescription("- make code not spaghetti\n");
 
-            builder.setColor(Color.pink);
+        builder.setColor(Color.pink);
 
-            event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
-        }
+        event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
+
     }
 
     public void pingCommand(SlashCommandInteractionEvent event) {
