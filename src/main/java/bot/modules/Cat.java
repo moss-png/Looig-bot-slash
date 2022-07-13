@@ -100,9 +100,9 @@ public class Cat {
                             .addFile(new File(catFolder + "/" + file)).queue();
                 } else {
                     try {
-                        String file = getCatFromIndex(event.getOption("cat").getAsInt());
+                        String file = getCatFromIndex(event.getOption("id").getAsInt());
                         if (logging) {
-                            System.out.println(event.getOption("cat").getAsInt());
+                            System.out.println(event.getOption("id").getAsInt());
                         }
                         event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
                                 .addFile(new File(catFolder + "/" + file)).queue();
