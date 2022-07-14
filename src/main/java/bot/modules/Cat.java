@@ -1,8 +1,11 @@
 package bot.modules;
 
+import bot.main.Main;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -97,16 +100,18 @@ public class Cat {
                         System.out.println(index + "");
                     }
                     String file = getCatFromIndex(index);
-                    event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
-                            .addFile(new File(catFolder + "/" + file)).queue();
+                    event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
+                            Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                                    .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
                 } else {
                     try {
                         String file = getCatFromIndex(event.getOption("id").getAsInt());
                         if (logging) {
                             System.out.println(event.getOption("id").getAsInt());
                         }
-                        event.getHook().sendMessage("<https://cta.pet/cats/" + file + ">")
-                                .addFile(new File(catFolder + "/" + file)).queue();
+                        event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
+                                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + event.getOption("id").getAsInt())
+                                        .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
                     } catch (IndexOutOfBoundsException e) {
                         event.getHook().sendMessage("couldn't find the cat specified").queue();
                     } catch (NumberFormatException e) {
@@ -116,6 +121,8 @@ public class Cat {
             }
         } catch (NullPointerException e) {
             event.getHook().sendMessage("Couldn't access target directory").queue();
+        } catch (Exception e){
+            Main.dmException(event, e);
         }
     }
 
