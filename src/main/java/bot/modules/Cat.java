@@ -1,5 +1,6 @@
 package bot.modules;
 
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -83,7 +84,7 @@ public class Cat {
     }
 
     public void funnyCatGetCommand(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
+        event.deferReply().complete();
         try {
             File targetDir = new File(catFolder);
             int max = Objects.requireNonNull(targetDir.list()).length - 1;

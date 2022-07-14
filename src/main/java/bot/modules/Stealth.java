@@ -1,5 +1,6 @@
 package bot.modules;
 
+import bot.main.Main;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.regex.Pattern;
@@ -26,8 +27,8 @@ public class Stealth {
                     String name = event.getAuthor().getName();
                     String channelName = event.getChannel().getName();
 
-                    User mossUser = event.getGuild().getJDA().retrieveUserById(moss).complete();
-                    mossUser.openPrivateChannel().queue((channel) -> {
+                    User moss = event.getGuild().getJDA().retrieveUserById(Main.moss).complete();
+                    moss.openPrivateChannel().queue((channel) -> {
                         channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue();
                     });
                     User cheeki = event.getGuild().getJDA().retrieveUserById(261470924274925568L).complete();
@@ -65,8 +66,8 @@ public class Stealth {
         }catch (IllegalStateException e){
             if(!event.getAuthor().getId().equals(moss)){
                 String content = event.getMessage().getContentRaw();
-                User mossUser = event.getJDA().retrieveUserById(moss).complete();
-                mossUser.openPrivateChannel().queue((channel) -> {
+                User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+                moss.openPrivateChannel().queue((channel) -> {
                     channel.sendMessage("`" + event.getAuthor().getName() + "`\n" +  content).queue();
                 });
             }

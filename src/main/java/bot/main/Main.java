@@ -4,6 +4,7 @@ import bot.modules.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main extends ListenerAdapter {
@@ -22,7 +24,7 @@ public class Main extends ListenerAdapter {
     public static boolean managementModule = false;
     public static boolean standardModule = false;
     public static boolean stealthModule = true;
-    public static boolean toolsModule = false;
+    public static boolean toolsModule = true;
     public static boolean toysModule = true;
 
     private static final Dotenv dotenv = Dotenv.load();
@@ -119,22 +121,30 @@ public class Main extends ListenerAdapter {
         if (event.getName().equals("yeah")) {
             event.reply("yeah").queue();
         }else{
-            switch (event.getName()){
-                case "funnycat":
-                    new Cat(event);
-                    break;
-                case "internal":
-                    new Management(event);
-                    break;
-                case "math":
-                    new MathStuff(event);
-                    break;
-                case "ping":
-                    new Standard(event);
-                    break;
-                case "tools":
-                    new Tools(event);
-                    break;
+            try{
+                switch (event.getName()){
+                    case "funnycat":
+                        new Cat(event);
+                        break;
+                    case "internal":
+                        new Management(event);
+                        break;
+                    case "math":
+                        new MathStuff(event);
+                        break;
+                    case "ping":
+                        new Standard(event);
+                        break;
+                    case "tools":
+                        new Tools(event);
+                        break;
+                }
+            } catch (Exception e){
+                User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+                moss.openPrivateChannel().queue((channel) -> {
+                    String error = Arrays.toString(e.getStackTrace());
+                    channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
+                });
             }
         }
     }
