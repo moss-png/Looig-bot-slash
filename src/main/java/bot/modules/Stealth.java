@@ -65,17 +65,14 @@ public class Stealth {
     }
 
     public void passiveRelay(MessageReceivedEvent event) {
-        try{
-            event.getGuild();
-        }catch (IllegalStateException e){
-            if(!event.getAuthor().getId().equals(moss)){
-                String content = event.getMessage().getContentRaw();
-                User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-                moss.openPrivateChannel().queue((channel) -> {
-                    channel.sendMessage("`" + event.getAuthor().getName() + "`\n" +  content).queue();
-                });
-            }
+        if (!event.isFromGuild() && !event.getAuthor().getId().equals(moss)) {
+            String content = event.getMessage().getContentRaw();
+            User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+            moss.openPrivateChannel().queue((channel) -> {
+                channel.sendMessage("`" + event.getAuthor().getName() + "`\n" + content).queue();
+            });
         }
     }
 }
+
 

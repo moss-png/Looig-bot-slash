@@ -59,7 +59,9 @@ public class Main extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         String content = event.getMessage().getContentRaw();
         if (!event.getAuthor().getId().contains(looig)) {
-            if (logging) {
+            if (logging && event.isFromGuild()) {
+                System.out.println("(" + event.getGuild().getName() + ") " + event.getAuthor().getName() + " said: " + content);
+            } else if(logging) {
                 System.out.println(event.getAuthor().getName() + " said: " + content);
             }
             System.setProperty("http.agent", "Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Raspbian Chromium/74.0.3729.157 Chrome/74.0.3729.157 Safari/537.36");

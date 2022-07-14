@@ -67,15 +67,14 @@ public class Toys {
     public void egoCommand(MessageReceivedEvent event) {
         String content = event.getMessage().getContentRaw();
         if (content.equals(getGuildPrefix(event) + "ego")) {
-            try{
-                event.getGuild();
+            if (event.isFromGuild()) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setThumbnail(Objects.requireNonNull(event.getMessage().getMember()).getEffectiveAvatarUrl());
                 builder.setFooter(event.getMessage().getAuthor().getName(), event.getMessage().getMember().getEffectiveAvatarUrl());
                 builder.setImage(event.getMessage().getMember().getEffectiveAvatarUrl());
                 builder.setAuthor(event.getMessage().getAuthor().getName(), null, event.getMessage().getMember().getEffectiveAvatarUrl());
                 event.getMessage().replyEmbeds(builder.build()).mentionRepliedUser(false).queue();
-            }catch (IllegalStateException e){
+            } else {
                 event.getMessage().reply("this command does not work in DMs, sorry about that").mentionRepliedUser(false).queue();
             }
         }
