@@ -14,8 +14,8 @@ public class Stealth {
 
     public void trigger(MessageReceivedEvent event){
         makeCheekiHappyCommand(event);
-        ghostCommand(event);
-        dmDetector(event);
+        activeRelay(event);
+        passiveRelay(event);
     }
 
     public void makeCheekiHappyCommand(MessageReceivedEvent event) {
@@ -44,23 +44,27 @@ public class Stealth {
         }
     }
 
-    public void ghostCommand(MessageReceivedEvent event) {
+    public void activeRelay(MessageReceivedEvent event) {
         if (event.getAuthor().getId().contains(moss)) {
-            String content = event.getMessage().getContentRaw();
-            if (content.contains(getGuildPrefix(event) + "ghost")) {
-                int bLength = (getGuildPrefix(event) + "ghost ").length();
-                String id = content.substring(bLength, bLength + 18);
-                String message = content.substring(bLength + 19);
-                User user = event.getJDA().retrieveUserById(id).complete();
-                user.openPrivateChannel().queue((channel) -> {
-                    channel.sendMessage(message).queue();
-                });
-                event.getMessage().addReaction("\u2705").queue();
+            try {
+                String content = event.getMessage().getContentRaw();
+                if (content.contains(getGuildPrefix(event) + "relay")) {
+                    int bLength = (getGuildPrefix(event) + "relay ").length();
+                    String id = content.substring(bLength, bLength + 18);
+                    String message = content.substring(bLength + 19);
+                    User user = event.getJDA().retrieveUserById(id).complete();
+                    user.openPrivateChannel().queue((channel) -> {
+                        channel.sendMessage(message).queue();
+                    });
+                    event.getMessage().addReaction("\u2705").queue();
+                }
+            }catch (Exception e) {
+                Main.dmException(event, e);
             }
         }
     }
 
-    public void dmDetector(MessageReceivedEvent event) {
+    public void passiveRelay(MessageReceivedEvent event) {
         try{
             event.getGuild();
         }catch (IllegalStateException e){
