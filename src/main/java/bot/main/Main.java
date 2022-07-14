@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -21,7 +22,6 @@ public class Main extends ListenerAdapter {
     public static boolean logging = false;
 
     public static boolean catModule = true;
-    public static boolean managementModule = false;
     public static boolean standardModule = false;
     public static boolean stealthModule = true;
     public static boolean toolsModule = true;
@@ -39,7 +39,7 @@ public class Main extends ListenerAdapter {
     public Toys toys = new Toys();
     public Standard standard = new Standard();
     public Tools tools = new Tools();
-    public Management management = new Management();
+    public Internal internal = new Internal();
     public Stealth stealth = new Stealth();
 
     public static void main(String[] args) throws LoginException {
@@ -57,10 +57,8 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-
         String content = event.getMessage().getContentRaw();
         if (!event.getAuthor().getId().contains(looig)) {
-
             if (logging) {
                 System.out.println(event.getAuthor().getName() + " said: " + content);
             }
@@ -94,20 +92,18 @@ public class Main extends ListenerAdapter {
                     tools.giveMessageCommand(event);
                 }
             }
-            if (managementModule && event.getAuthor().getId().contains(moss)) {
+            if (event.getAuthor().getId().contains(moss)) {
                 if(content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlash")) {
-                    management.updateSlashCommands(event);
+                    internal.updateSlashCommands(event);
                 }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlashGlobal")) {
-                    management.updateSlashCommandsGlobal(event);
+                    internal.updateSlashCommandsGlobal(event);
                 }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "deleteSlash")) {
-                    management.deleteSlashCommands(event);
+                    internal.deleteSlashCommands(event);
                 }
             }
 
             if (toysModule) toys.trigger(event);
             if (stealthModule) stealth.trigger(event);
-
-            toggle(event);
         } else {
             if (logging) {
                 System.out.println(">>> " + content);
@@ -120,33 +116,37 @@ public class Main extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (event.getName().equals("yeah")) {
             event.reply("yeah").queue();
-        }else{
-            try{
-                switch (event.getName()){
-                    case "funnycat":
-                        new Cat(event);
-                        break;
-                    case "internal":
-                        new Management(event);
-                        break;
-                    case "math":
-                        new MathStuff(event);
-                        break;
-                    case "ping":
-                        new Standard(event);
-                        break;
-                    case "tools":
-                        new Tools(event);
-                        break;
-                }
-            } catch (Exception e){
-                User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-                moss.openPrivateChannel().queue((channel) -> {
-                    String error = Arrays.toString(e.getStackTrace());
-                    channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
-                });
+        } else {
+            switch (event.getName()) {
+                case "funnycat":
+                    new Cat(event);
+                    break;
+                case "internal":
+                    if(!event.getUser().getId().contains(moss)){
+                        event.reply("you don't get to do that").queue();
+                    }else {
+                        new Internal(event);
+                    }
+                    break;
+                case "math":
+                    new MathStuff(event);
+                    break;
+                case "ping":
+                    new Standard(event);
+                    break;
+                case "tools":
+                    new Tools(event);
+                    break;
             }
         }
+    }
+
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        if (event.getComponentId().contains("module")) {
+            internal.toggleModulesCommand(event);
+        }
+
     }
 
     public static String getGuildPrefix(MessageReceivedEvent event) {
@@ -159,29 +159,19 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    public void toggle(MessageReceivedEvent event) {
-        String content = event.getMessage().getContentRaw();
-        if(event.getAuthor().getId().contains(moss)) {
-            if (content.equalsIgnoreCase(getGuildPrefix(event) + "toggle")) {
-                event.getMessage().reply(
-                        "```cat        " + catModule + "\n" +
-                                "management " + managementModule + "\n" +
-                                "standard   " + standardModule + "\n" +
-                                "stealth    " + stealthModule + "\n" +
-                                "tools      " + toolsModule + "\n" +
-                                "toys       " + toysModule + "\n" + "```").mentionRepliedUser(false).queue();
-            }else if(content.contains(getGuildPrefix(event) + "toggle ")){
-                String message = content.substring((getGuildPrefix(event) + "toggle ").length());
-                switch (message) {
-                    case "cat" : catModule = !catModule; break;
-                    case "management" : managementModule = !managementModule; break;
-                    case "standard" : standardModule = !standardModule; break;
-                    case "stealth" : stealthModule = !stealthModule; break;
-                    case "tools" : toolsModule = !toolsModule; break;
-                    case "toys" : toysModule = !toysModule; break;
-                }
-                event.getMessage().addReaction("\uD83C\uDD97").queue();
-            }
-        }
+    public static void dmException(MessageReceivedEvent event, Exception e){
+        User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+        moss.openPrivateChannel().queue((channel) -> {
+            String error = Arrays.toString(e.getStackTrace());
+            channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
+        });
+    }
+
+    public static void dmException(SlashCommandInteractionEvent event, Exception e){
+        User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+        moss.openPrivateChannel().queue((channel) -> {
+            String error = Arrays.toString(e.getStackTrace());
+            channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
+        });
     }
 }
