@@ -2,7 +2,6 @@ package bot.modules;
 
 import bot.main.Main;
 import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -24,7 +23,7 @@ import static bot.main.Main.*;
 public class Cat {
 
     public Cat(SlashCommandInteractionEvent event) {
-        switch (event.getSubcommandName()) {
+        switch (Objects.requireNonNull(event.getSubcommandName())) {
             case "get":
                 funnyCatGetCommand(event);
                 break;
@@ -46,7 +45,7 @@ public class Cat {
                 BufferedInputStream input;
                 if (!event.getMessage().getAttachments().isEmpty()) {
                     try {
-                        input = new BufferedInputStream(event.getMessage().getAttachments().get(0).retrieveInputStream().get());
+                        input = new BufferedInputStream(event.getMessage().getAttachments().get(0).getProxy().download().get());
                         Files.copy(input, Paths.get(catFolder + "/" + size + "." + event.getMessage().getAttachments().get(0).getFileExtension()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (InterruptedException | ExecutionException | IOException e) {
                         System.err.println("I have been interrupted");
@@ -105,12 +104,12 @@ public class Cat {
                                     .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
                 } else {
                     try {
-                        String file = getCatFromIndex(event.getOption("id").getAsInt());
+                        String file = getCatFromIndex(Objects.requireNonNull(event.getOption("id")).getAsInt());
                         if (logging) {
-                            System.out.println(event.getOption("id").getAsInt());
+                            System.out.println(Objects.requireNonNull(event.getOption("id")).getAsInt());
                         }
                         event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
-                                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + event.getOption("id").getAsInt())
+                                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + Objects.requireNonNull(event.getOption("id")).getAsInt())
                                         .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
                     } catch (IndexOutOfBoundsException e) {
                         event.getHook().sendMessage("couldn't find the cat specified").queue();
