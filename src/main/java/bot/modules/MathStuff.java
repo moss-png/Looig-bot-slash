@@ -33,7 +33,7 @@ public class MathStuff {
                 a = help;
             }
 
-            event.reply("`gcd "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + ":` " + a).queue();
+            event.reply("`gcd "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + "` " + a).queue();
         } catch (ArithmeticException e) {
             event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
@@ -54,7 +54,7 @@ public class MathStuff {
                 lcm += absHigherNumber;
             }
 
-            event.getChannel().sendMessage("`lcm "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + ":` " + lcm).queue();
+            event.getChannel().sendMessage("`lcm "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + "` " + lcm).queue();
         } catch (ArithmeticException e) {
             event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
@@ -68,7 +68,7 @@ public class MathStuff {
             while ((i < number) && (number % i != 0)) {
                 i++;
             }
-            event.reply("`isPrime " + number + ":` " + (i == number)).queue();
+            event.reply("`isPrime " + number + "` " + (i == number)).queue();
         } catch (ArithmeticException e) {
             event.reply("the fact that discord somehow considers this number an integer, concerns me").queue();
         }
