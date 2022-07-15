@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static bot.main.Main.getGuildPrefix;
@@ -16,7 +17,7 @@ public class Tools {
     public Tools(){}
 
     public Tools(SlashCommandInteractionEvent event) {
-        switch (event.getSubcommandName()) {
+        switch (Objects.requireNonNull(event.getSubcommandName())) {
             case "dice":
                 rollDiceCommand(event);
                 break;
@@ -33,7 +34,7 @@ public class Tools {
         if (event.getOption("d") == null) {
             event.reply("d6: " + ((int) (Math.random() * (6 - 1 + 1)) + 1)).queue();
         } else {
-            int maxValue = event.getOption("d").getAsInt();
+            int maxValue = Objects.requireNonNull(event.getOption("d")).getAsInt();
             event.reply("`d" + maxValue + ":` " + ((int) (Math.random() * (maxValue - 1 + 1)) + 1)).queue();
         }
     }
@@ -90,6 +91,6 @@ public class Tools {
 
         int v = ((int) (Math.random() * (m.length - 1)) + 1);
 
-        event.reply("`Q:` " + event.getOption("q").getAsString() + "\n`A:` " + m[v] ).queue();
+        event.reply("`Q:` " + Objects.requireNonNull(event.getOption("q")).getAsString() + "\n`A:` " + m[v] ).queue();
     }
 }
