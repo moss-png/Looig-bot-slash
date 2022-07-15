@@ -43,8 +43,8 @@ public class Main extends ListenerAdapter {
     public Stealth stealth = new Stealth();
 
     public static void main(String[] args) throws LoginException {
+        //the token found in old commits doesn't work anymore no need to try
         String token = dotenv.get("TOKEN");
-        System.out.println(token);
         JDABuilder builder = JDABuilder.createDefault(token);
 
         builder.setToken(token);
