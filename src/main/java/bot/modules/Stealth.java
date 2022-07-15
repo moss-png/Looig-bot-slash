@@ -3,6 +3,8 @@ package bot.modules;
 import bot.main.Main;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static bot.main.Main.getGuildPrefix;
@@ -45,7 +47,7 @@ public class Stealth {
     }
 
     public void activeRelay(MessageReceivedEvent event) {
-        if (event.getAuthor().getId().contains(moss)) {
+        if (Arrays.stream(whitelist).anyMatch(event.getAuthor().getId()::contains)) {
             try {
                 String content = event.getMessage().getContentRaw();
                 if (content.contains(getGuildPrefix(event) + "relay")) {
@@ -65,7 +67,7 @@ public class Stealth {
     }
 
     public void passiveRelay(MessageReceivedEvent event) {
-        if (!event.isFromGuild() && !event.getAuthor().getId().equals(moss)) {
+        if (!event.isFromGuild() && Arrays.stream(whitelist).noneMatch(event.getAuthor().getId()::contains)) {
             String content = event.getMessage().getContentRaw();
             User moss = event.getJDA().retrieveUserById(Main.moss).complete();
             moss.openPrivateChannel().queue((channel) -> {

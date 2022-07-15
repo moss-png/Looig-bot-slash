@@ -32,6 +32,7 @@ public class Main extends ListenerAdapter {
     public static String astaCult = dotenv.get("ASTA_CULT");
     public static String funnyCats = dotenv.get("FUNNY_CATS");
     public static String moss = dotenv.get("MOSS");
+    public static String[] whitelist = dotenv.get("WHITELIST").split(",");
     public static String looig = dotenv.get("LOOIG");
     public static String looigData = dotenv.get("LOOIG_DATA_PATH");
 
@@ -70,7 +71,7 @@ public class Main extends ListenerAdapter {
                 if (content.equalsIgnoreCase("gwa gwa")) {
                     cat.gwagwaCommand(event);
                 } else if (content.equalsIgnoreCase(getGuildPrefix(event) + "deleteLast") &&
-                        (event.getAuthor().getId().contains(moss))) {
+                        Arrays.stream(whitelist).anyMatch(event.getAuthor().getId()::contains)) {
                     cat.deleteLastCat(event);
                 } else {
                     cat.funnyCatCommand(event);
@@ -94,7 +95,7 @@ public class Main extends ListenerAdapter {
                     tools.giveMessageCommand(event);
                 }
             }
-            if (event.getAuthor().getId().contains(moss)) {
+            if (Arrays.stream(whitelist).anyMatch(event.getAuthor().getId()::contains)) {
                 if(content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlash")) {
                     internal.updateSlashCommands(event);
                 }else if (content.equalsIgnoreCase(getGuildPrefix(event) + "updateSlashGlobal")) {
@@ -124,7 +125,7 @@ public class Main extends ListenerAdapter {
                     new Cat(event);
                     break;
                 case "internal":
-                    if(!event.getUser().getId().contains(moss)){
+                    if(Arrays.stream(whitelist).noneMatch(event.getUser().getId()::contains)){
                         event.reply("you don't get to do that").queue();
                     }else {
                         new Internal(event);

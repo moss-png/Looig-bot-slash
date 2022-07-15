@@ -60,7 +60,7 @@ public class Cat {
                 }
                 event.getMessage().addReaction("\uD83D\uDC31").queue();
             } else if (content.contains(getGuildPrefix(event) + "funnycat save") &&
-                    event.getAuthor().getId().contains(moss)) {
+                    Arrays.stream(whitelist).anyMatch(event.getAuthor().getId()::contains)) {
                 if (content.equalsIgnoreCase(getGuildPrefix(event) + "funnyCat save")) {
                     event.getMessage().reply("no url specified").mentionRepliedUser(false).queue();
                 } else {
