@@ -2,10 +2,12 @@ package bot.modules;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.util.Objects;
+
 public class MathStuff {
 
     public MathStuff(SlashCommandInteractionEvent event) {
-        switch (event.getSubcommandName()) {
+        switch (Objects.requireNonNull(event.getSubcommandName())) {
             case "gcd":
                 gcdCommand(event);
                 break;
@@ -21,8 +23,8 @@ public class MathStuff {
     public void gcdCommand(SlashCommandInteractionEvent event) {
         try {
 
-            int a = event.getOption("a").getAsInt();
-            int b = event.getOption("b").getAsInt();
+            int a = Objects.requireNonNull(event.getOption("a")).getAsInt();
+            int b = Objects.requireNonNull(event.getOption("b")).getAsInt();
             int help;
 
             while (b != 0) {
@@ -31,7 +33,7 @@ public class MathStuff {
                 a = help;
             }
 
-            event.reply("`gcd "+ event.getOption("a").getAsString() + " " + event.getOption("b").getAsString() + ":` " + a).queue();
+            event.reply("`gcd "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + ":` " + a).queue();
         } catch (ArithmeticException e) {
             event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
@@ -40,8 +42,8 @@ public class MathStuff {
 
     public void lcmCommand(SlashCommandInteractionEvent event) {
         try {
-            int a = event.getOption("a").getAsInt();
-            int b = event.getOption("b").getAsInt();
+            int a = Objects.requireNonNull(event.getOption("a")).getAsInt();
+            int b = Objects.requireNonNull(event.getOption("b")).getAsInt();
 
             int absNumber1 = Math.abs(a);
             int absNumber2 = Math.abs(b);
@@ -52,7 +54,7 @@ public class MathStuff {
                 lcm += absHigherNumber;
             }
 
-            event.getChannel().sendMessage("`lcm "+ event.getOption("a").getAsString() + " " + event.getOption("b").getAsString() + ":` " + lcm).queue();
+            event.getChannel().sendMessage("`lcm "+ Objects.requireNonNull(event.getOption("a")).getAsString() + " " + Objects.requireNonNull(event.getOption("b")).getAsString() + ":` " + lcm).queue();
         } catch (ArithmeticException e) {
             event.reply("the fact that discord considers both of these two numbers integers, concerns me").queue();
         }
@@ -61,7 +63,7 @@ public class MathStuff {
 
     public void isPrimeCommand(SlashCommandInteractionEvent event) {
         try {
-            int number = event.getOption("x").getAsInt();
+            int number = Objects.requireNonNull(event.getOption("x")).getAsInt();
             int i = 2;
             while ((i < number) && (number % i != 0)) {
                 i++;
