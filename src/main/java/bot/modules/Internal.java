@@ -1,9 +1,5 @@
 package bot.modules;
 
-//import net.dv8tion.jda.api.EmbedBuilder;
-//import net.dv8tion.jda.api.Permission;
-//import net.dv8tion.jda.api.entities.Guild;
-
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -12,6 +8,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+import java.util.Objects;
 
 import static bot.main.Main.*;
 
@@ -52,7 +50,7 @@ public class Internal {
 
 
     public Internal(SlashCommandInteractionEvent event) {
-        switch (event.getSubcommandName()) {
+        switch (Objects.requireNonNull(event.getSubcommandName())) {
             case "logging":
                 loggingCommand(event);
                 break;
@@ -79,7 +77,7 @@ public class Internal {
 
     public void loggingCommand(SlashCommandInteractionEvent event) {
         try {
-            if (event.getOption("toggle").getAsBoolean()) {
+            if (Objects.requireNonNull(event.getOption("toggle")).getAsBoolean()) {
                 logging = true;
                 System.out.println("logging is now on");
                 event.reply("message logging has been turned on").queue();
