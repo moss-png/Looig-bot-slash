@@ -75,7 +75,6 @@ public class Tools {
                 "Absolutely",
                 "Possibly",
                 "You're hot ( ͡° ͜ʖ ͡°)",
-                "It will pass",
                 "Count on it",
                 "No doubt",
                 "Maybe",
@@ -84,13 +83,11 @@ public class Tools {
                 "Bet on it",
                 "Can't say",
                 "No",
-                "Go for it",
-                "Ask Again",
                 "Odds aren't good"
         };
 
         int v = ((int) (Math.random() * (m.length - 1)) + 1);
 
-        event.reply("`Q:` " + Objects.requireNonNull(event.getOption("q")).getAsString() + "\n`A:` " + m[v] ).queue();
+        event.reply("`Q` " + Objects.requireNonNull(event.getOption("q")).getAsString() + "\n`A` " + m[v] ).queue();
     }
 }
