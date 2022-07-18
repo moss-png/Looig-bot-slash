@@ -9,11 +9,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main extends ListenerAdapter {
@@ -44,7 +46,7 @@ public class Main extends ListenerAdapter {
     public Stealth stealth = new Stealth();
 
     public static void main(String[] args) throws LoginException {
-        //the token found in old commits doesn't work anymore no need to try
+        //the token found in old commits doesn't work anymore, don't bother trying
         String token = dotenv.get("TOKEN");
         JDABuilder builder = JDABuilder.createDefault(token);
 
@@ -116,7 +118,18 @@ public class Main extends ListenerAdapter {
 
 
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        if (logging && event.isFromGuild()) {
+            System.out.println("(" + Objects.requireNonNull(event.getGuild()).getName() + ") " + event.getUser().getName() + " used /" + event.getName());
+        } else if(logging) {
+            System.out.print(event.getUser().getName() + " used /" + event.getName());
+            if (event.getSubcommandName()!=null){
+                System.out.println(" " + event.getSubcommandName());
+            }else{
+                System.out.println();
+            }
+
+        }
         if (event.getName().equals("yeah")) {
             event.reply("yeah").queue();
         } else {
@@ -149,7 +162,6 @@ public class Main extends ListenerAdapter {
         if (event.getComponentId().contains("module")) {
             internal.toggleModulesCommand(event);
         }
-
     }
 
     public static String getGuildPrefix(MessageReceivedEvent event) {
