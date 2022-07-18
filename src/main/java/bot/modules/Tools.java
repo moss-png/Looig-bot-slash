@@ -71,19 +71,32 @@ public class Tools {
 
     public void askLooigCommand(SlashCommandInteractionEvent event) {
         String[] m = {
-                "Yes",
-                "Absolutely",
-                "Possibly",
-                "You're hot ( ͡° ͜ʖ ͡°)",
-                "Count on it",
-                "No doubt",
-                "Maybe",
-                "Act now",
-                "Very likely",
-                "Bet on it",
-                "Can't say",
-                "No",
-                "Odds aren't good"
+                "Yes",                         //positive
+                "Absolutely",                  //positive
+                "Count on it",                 //positive
+                "No doubt",                    //positive
+                "Very likely",                 //positive
+                "Bet on it",                   //positive
+
+                "Maybe",                       //mostly positive
+                "Possibly",                    //mostly positive
+
+                "Can't say",                   //inconclusive
+                "No idea",                     //inconclusive
+                "That is not for me to judge", //inconclusive
+
+                "You're hot",                  //useless
+                "You stink",                   //useless
+
+                "No",                          //negative
+                "Absolutely not",              //negative
+                "Odds aren't good",            //negative
+                "No chance",                   //negative
+                "Nope",                        //negative
+                "Please don't",                //negative
+
+                "Doubtful",                    //mostly negative
+                "Probably not"                 //mostly negative
         };
 
         int v = ((int) (Math.random() * (m.length - 1)) + 1);
