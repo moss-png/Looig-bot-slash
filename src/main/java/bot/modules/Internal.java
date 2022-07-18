@@ -77,17 +77,12 @@ public class Internal {
 
     public void loggingCommand(SlashCommandInteractionEvent event) {
         try {
-            if (Objects.requireNonNull(event.getOption("toggle")).getAsBoolean()) {
-                logging = true;
-                System.out.println("logging is now on");
-                event.reply("message logging has been turned on").queue();
-            } else {
-                logging = false;
-                System.out.println("logging is now off");
-                event.reply("message logging has been turned off").queue();
-            }
+            logging = Objects.requireNonNull(event.getOption("toggle")).getAsBoolean();
+            System.out.println("logging is now set to " + logging);
         } catch (NullPointerException e) {
-            event.reply("message logging is set to " + logging).queue();
+            if (logging) System.out.println("no option provided assuming status");
+        } finally {
+            event.reply("message logging `" + logging + "`").queue();
         }
 
     }
