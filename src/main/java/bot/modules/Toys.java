@@ -25,8 +25,8 @@ public class Toys {
 
     public void loveYouCommand(MessageReceivedEvent event) {
         String content = event.getMessage().getContentRaw();
-        if (content.contains(getGuildPrefix(event) + "loveYou")) {
-            event.getMessage().reply("love you too " + event.getAuthor().getAsMention() + "!").mentionRepliedUser(false).queue();
+        if (content.contains("love you <@" + looig + ">" )) {
+            event.getChannel().sendMessage("love you too " + event.getAuthor().getName() + "!").queue();
         }
     }
 
