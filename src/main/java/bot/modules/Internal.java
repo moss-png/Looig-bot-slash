@@ -21,7 +21,8 @@ public class Internal {
                     Commands.slash("funnycat", "get a funny cat")
                             .addSubcommands(
                             new SubcommandData("get", "posts funny cat image/video")
-                                    .addOption(OptionType.INTEGER, "id", "numerical id of the cat, random if left blank"),
+                                    .addOption(OptionType.INTEGER, "id", "numerical id of the cat, random if left blank")
+                                    .addOption(OptionType.BOOLEAN, "aslink", "get the file as a link instead of a direct upload"),
                             new SubcommandData("count", "get the total count and filesize of all cats")),
                     Commands.slash("internal", "internal bot settings")
                             .addSubcommands(

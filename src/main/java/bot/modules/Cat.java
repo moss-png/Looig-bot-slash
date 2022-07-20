@@ -1,6 +1,7 @@
 package bot.modules;
 
 import bot.main.Main;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -87,6 +88,7 @@ public class Cat {
 
     public void funnyCatGetCommand(SlashCommandInteractionEvent event) {
         event.deferReply().complete();
+        JDA jda = event.getJDA();
         try {
             File targetDir = new File(catFolder);
             int max = Objects.requireNonNull(targetDir.list()).length - 1;
@@ -98,19 +100,14 @@ public class Cat {
                     if (logging) {
                         System.out.println(index + "");
                     }
-                    String file = getCatFromIndex(index);
-                    event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
-                            Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                                    .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+                    sendCat(event, index);
+
                 } else {
                     try {
-                        String file = getCatFromIndex(Objects.requireNonNull(event.getOption("id")).getAsInt());
                         if (logging) {
                             System.out.println(Objects.requireNonNull(event.getOption("id")).getAsInt());
                         }
-                        event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
-                                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + Objects.requireNonNull(event.getOption("id")).getAsInt())
-                                        .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+                        sendCat(event, Objects.requireNonNull(event.getOption("id")).getAsInt());
                     } catch (IndexOutOfBoundsException e) {
                         event.getHook().sendMessage("couldn't find the cat specified").queue();
                     } catch (NumberFormatException e) {
@@ -121,7 +118,7 @@ public class Cat {
         } catch (NullPointerException e) {
             event.getHook().sendMessage("Couldn't access target directory").queue();
         } catch (Exception e){
-            Main.dmException(event, e);
+            Main.dmException(jda, e);
         }
     }
 
@@ -191,6 +188,20 @@ public class Cat {
         assert fileNames != null;
         Arrays.sort(fileNames);
         return fileNames[index];
+    }
+
+    private void sendCat(SlashCommandInteractionEvent event, int index){
+        String file = getCatFromIndex(index);
+        if (event.getOption("aslink") != null &&
+                Objects.requireNonNull(event.getOption("aslink")).getAsBoolean()) {
+            event.getHook().sendMessage("https://cta.pet/cats/" + file).addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+        } else {
+            event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+        }
     }
 
 }
