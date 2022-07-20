@@ -174,16 +174,8 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    public static void dmException(MessageReceivedEvent event, Exception e){
-        User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-        moss.openPrivateChannel().queue((channel) -> {
-            String error = Arrays.toString(e.getStackTrace());
-            channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
-        });
-    }
-
-    public static void dmException(SlashCommandInteractionEvent event, Exception e){
-        User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+    public static void dmException(JDA jda, Exception e){
+        User moss = jda.retrieveUserById(Main.moss).complete();
         moss.openPrivateChannel().queue((channel) -> {
             String error = Arrays.toString(e.getStackTrace());
             channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();

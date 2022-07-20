@@ -1,6 +1,7 @@
 package bot.modules;
 
 import bot.main.Main;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -48,6 +49,7 @@ public class Stealth {
 
     public void activeRelay(MessageReceivedEvent event) {
         if (Arrays.stream(whitelist).anyMatch(event.getAuthor().getId()::contains)) {
+            JDA jda = event.getJDA();
             try {
                 String content = event.getMessage().getContentRaw();
                 if (content.contains(getGuildPrefix(event) + "relay")) {
@@ -61,7 +63,7 @@ public class Stealth {
                     event.getMessage().addReaction("\u2705").queue();
                 }
             }catch (Exception e) {
-                Main.dmException(event, e);
+                Main.dmException(jda, e);
             }
         }
     }
