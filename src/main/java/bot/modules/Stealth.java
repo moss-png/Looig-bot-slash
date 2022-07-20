@@ -31,13 +31,9 @@ public class Stealth {
                     String channelName = event.getChannel().getName();
 
                     User moss = event.getGuild().getJDA().retrieveUserById(Main.moss).complete();
-                    moss.openPrivateChannel().queue((channel) -> {
-                        channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue();
-                    });
+                    moss.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
                     User cheeki = event.getGuild().getJDA().retrieveUserById(261470924274925568L).complete();
-                    cheeki.openPrivateChannel().queue((channel) -> {
-                        channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue();
-                    });
+                    cheeki.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
 
                     event.getMessage().delete().queue();
                 }
@@ -57,9 +53,7 @@ public class Stealth {
                     String id = content.substring(bLength, bLength + 18);
                     String message = content.substring(bLength + 19);
                     User user = event.getJDA().retrieveUserById(id).complete();
-                    user.openPrivateChannel().queue((channel) -> {
-                        channel.sendMessage(message).queue();
-                    });
+                    user.openPrivateChannel().queue((channel) -> channel.sendMessage(message).queue());
                     event.getMessage().addReaction("\u2705").queue();
                 }
             }catch (Exception e) {
@@ -72,9 +66,7 @@ public class Stealth {
         if (!event.isFromGuild() && Arrays.stream(whitelist).noneMatch(event.getAuthor().getId()::contains)) {
             String content = event.getMessage().getContentRaw();
             User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-            moss.openPrivateChannel().queue((channel) -> {
-                channel.sendMessage("`" + event.getAuthor().getName() + "`\n" + content).queue();
-            });
+            moss.openPrivateChannel().queue((channel) -> channel.sendMessage("`" + event.getAuthor().getName() + "`\n" + content).queue());
         }
     }
 }
