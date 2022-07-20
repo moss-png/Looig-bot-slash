@@ -66,7 +66,8 @@ public class Stealth {
         if (!event.isFromGuild() && Arrays.stream(whitelist).noneMatch(event.getAuthor().getId()::contains)) {
             String content = event.getMessage().getContentRaw();
             User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-            moss.openPrivateChannel().queue((channel) -> channel.sendMessage("`" + event.getAuthor().getName() + "`\n" + content).queue());
+            moss.openPrivateChannel().queue((channel) ->
+                    channel.sendMessage("`" + event.getAuthor().getName() + "`\n" + content).queue());
         }
     }
 }
