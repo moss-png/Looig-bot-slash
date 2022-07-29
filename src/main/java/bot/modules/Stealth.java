@@ -22,24 +22,20 @@ public class Stealth {
     }
 
     public void makeCheekiHappyCommand(MessageReceivedEvent event) {
-        try {
-            if (event.getGuild().getId().equals("428944990249680896")) {
-                Pattern p = Pattern.compile("\\bmush\\b", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-                String content = event.getMessage().getContentRaw();
-                if (p.matcher(content).find()) {
-                    String name = event.getAuthor().getName();
-                    String channelName = event.getChannel().getName();
+        if (event.isFromGuild() && event.getGuild().getId().equals("428944990249680896")) {
+            Pattern p = Pattern.compile("\\bmush\\b", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+            String content = event.getMessage().getContentRaw();
+            if (p.matcher(content).find()) {
+                String name = event.getAuthor().getName();
+                String channelName = event.getChannel().getName();
 
-                    User moss = event.getGuild().getJDA().retrieveUserById(Main.moss).complete();
-                    moss.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
-                    User cheeki = event.getGuild().getJDA().retrieveUserById(261470924274925568L).complete();
-                    cheeki.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
+                User moss = event.getGuild().getJDA().retrieveUserById(Main.moss).complete();
+                moss.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
+                User cheeki = event.getGuild().getJDA().retrieveUserById(261470924274925568L).complete();
+                cheeki.openPrivateChannel().queue((channel) -> channel.sendMessage(name + " used the word mush in " + channelName + ":\n\n" + content).queue());
 
-                    event.getMessage().delete().queue();
-                }
+                event.getMessage().delete().queue();
             }
-        } catch (IllegalStateException ignored) {
-            //it's a dm go cry about it
         }
     }
 
