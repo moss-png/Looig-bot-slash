@@ -201,7 +201,6 @@ public class Cat {
     public void catchCatLink(MessageReceivedEvent event){
         String file = event.getMessage().getContentRaw().substring(("<https://cta.pet/cats/").length(),event.getMessage().getContentRaw().length()-1);
         event.getMessage().editMessage("\u200B").addFile(new File(catFolder + "/" + file)).queue();
-        event.getMessage().suppressEmbeds(true).queue();
     }
 
 }
