@@ -5,7 +5,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,6 +35,8 @@ public class Cat {
             case "count":
                 funnyCatCountCommand(event);
                 break;
+            case "submit":
+                submitNewCat(event);
         }
     }
 
@@ -201,6 +207,24 @@ public class Cat {
     public void catchCatLink(MessageReceivedEvent event){
         String file = event.getMessage().getContentRaw().substring(("<https://cta.pet/cats/").length(),event.getMessage().getContentRaw().length()-1);
         event.getMessage().editMessage("\u200B").addFile(new File(catFolder + "/" + file)).queue();
+    }
+
+    public void submitNewCat(SlashCommandInteractionEvent event){
+        TextInput link = TextInput.create("link", "Media link of the cat you want to add", TextInputStyle.SHORT)
+                .setPlaceholder("link")
+                .setRequiredRange(1, 1000)
+                .build();
+
+        TextInput reason = TextInput.create("reason", "Why do you think I should add this cat", TextInputStyle.PARAGRAPH)
+                .setPlaceholder("reason")
+                .setRequiredRange(0, 1000)
+                .build();
+
+        Modal modal = Modal.create("catsubmission", "Cat Submission Form")
+                .addActionRows(ActionRow.of(link), ActionRow.of(reason))
+                .build();
+
+        event.replyModal(modal).queue();
     }
 
 }

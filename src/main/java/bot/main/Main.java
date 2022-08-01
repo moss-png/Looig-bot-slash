@@ -161,24 +161,6 @@ public class Main extends ListenerAdapter {
                 case "tools":
                     new Tools(event);
                     break;
-                case "modal":
-                    TextInput subject = TextInput.create("wooh", "WOOH!", TextInputStyle.SHORT)
-                            .setPlaceholder("yeah")
-                            .setRequiredRange(10, 100)
-                            .build();
-
-                    TextInput body = TextInput.create("wohoo", "WOHOO!", TextInputStyle.PARAGRAPH)
-                            .setPlaceholder("hell yeah")
-                            .setMinLength(30)
-                            .setMaxLength(1000)
-                            .build();
-
-                    Modal modal = Modal.create("testmodal", "Test Modal")
-                            .addActionRows(ActionRow.of(subject), ActionRow.of(body))
-                            .build();
-
-                    event.replyModal(modal).queue();
-                    break;
             }
         }
     }
@@ -191,9 +173,13 @@ public class Main extends ListenerAdapter {
     }
 
     public void onModalInteraction( ModalInteractionEvent event) {
-        if (event.getModalId().equals("testmodal")) {
-            event.reply("congratulations").setEphemeral(true).queue();
-        }
+        User moss = event.getJDA().retrieveUserById(Main.moss).complete();
+        moss.openPrivateChannel().queue((channel) -> {
+            channel.sendMessage("cat submission by " + event.getUser().getName() + "#" + event.getUser().getDiscriminator() + ":\n" +
+                    "`link: `" + event.getValue("link").getAsString() + "\n" +
+                    "`reason: `" + event.getValue("reason").getAsString()).queue();
+        });
+        event.reply("cat has been submitted for review").setEphemeral(true).queue();
     }
 
     public static String getGuildPrefix(MessageReceivedEvent event) {

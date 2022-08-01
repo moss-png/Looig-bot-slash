@@ -22,7 +22,8 @@ public class Internal {
                             .addSubcommands(
                             new SubcommandData("get", "posts funny cat image/video")
                                     .addOption(OptionType.INTEGER, "id", "numerical id of the cat, random if left blank"),
-                            new SubcommandData("count", "get the total count and filesize of all cats")),
+                            new SubcommandData("count", "get the total count and filesize of all cats"),
+                            new SubcommandData("submit","submit a new cat for review. Don't send me inappropriate stuff")),
                     Commands.slash("internal", "internal bot settings")
                             .addSubcommands(
                             new SubcommandData("logging", "off at launch, used for debugging only")
@@ -45,8 +46,7 @@ public class Internal {
                                     .addOption(OptionType.INTEGER, "d", "if left blank a d6 will be used"),
                             new SubcommandData("coinflip", "flip a coin (riveting!)"),
                             new SubcommandData("asklooig", "magic 8ball type beat")
-                                    .addOption(OptionType.STRING, "q", "the question in question", true)),
-                    Commands.slash("modal","allow me to blow your mind or blow up, not sure which one")
+                                    .addOption(OptionType.STRING, "q", "the question in question", true))
             };
 
 
