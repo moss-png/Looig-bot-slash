@@ -14,7 +14,8 @@ import static bot.main.Main.looigData;
 
 public class Tools {
 
-    public Tools(){}
+    public Tools() {
+    }
 
     public Tools(SlashCommandInteractionEvent event) {
         switch (Objects.requireNonNull(event.getSubcommandName())) {
@@ -54,17 +55,17 @@ public class Tools {
             event.getMessage().reply("*saved*").mentionRepliedUser(false).queue();
         } catch (FileNotFoundException | IllegalStateException e) {
             event.getMessage().reply("couldn't access the message directory").mentionRepliedUser(false).queue();
-        } catch (StringIndexOutOfBoundsException e){
+        } catch (StringIndexOutOfBoundsException e) {
             event.getMessage().reply("something went wrong. Did you provide a message?").mentionRepliedUser(false).queue();
         }
     }
 
-    public void giveMessageCommand(MessageReceivedEvent event){
-        try{
+    public void giveMessageCommand(MessageReceivedEvent event) {
+        try {
             File text = new File(looigData + event.getAuthor().getName() + ".txt");
             Scanner scnr = new Scanner(text);
             event.getMessage().reply(scnr.nextLine()).mentionRepliedUser(false).queue();
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             event.getMessage().reply("something went wrong. Did you maybe try to retrieve your message without saving it first?").mentionRepliedUser(false).queue();
         }
     }
@@ -101,6 +102,6 @@ public class Tools {
 
         int v = ((int) (Math.random() * (m.length - 1)) + 1);
 
-        event.reply("`Q` " + Objects.requireNonNull(event.getOption("q")).getAsString() + "\n`A` " + m[v] ).queue();
+        event.reply("`Q` " + Objects.requireNonNull(event.getOption("q")).getAsString() + "\n`A` " + m[v]).queue();
     }
 }

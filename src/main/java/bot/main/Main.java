@@ -65,7 +65,7 @@ public class Main extends ListenerAdapter {
         String content = event.getMessage().getContentRaw();
         if (!event.getAuthor().getId().contains(looig)) {
 
-            if(!event.getAuthor().getId().contains(blacklist)) {
+            if (!event.getAuthor().getId().contains(blacklist)) {
                 if (logging && event.isFromGuild()) {
                     System.out.println("(" + event.getGuild().getName() + ") " + event.getAuthor().getName() + " said: " + content);
                 } else if (logging) {
@@ -115,7 +115,7 @@ public class Main extends ListenerAdapter {
             }
             if (stealthModule) stealth.trigger(event);
         } else {
-            if (content.contains("<https://cta.pet/cats/")){
+            if (content.contains("<https://cta.pet/cats/")) {
                 cat.catchCatLink(event);
             }
             if (logging) {
@@ -127,7 +127,7 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        if(!event.getUser().getId().contains(blacklist)) {
+        if (!event.getUser().getId().contains(blacklist)) {
             if (logging && event.isFromGuild()) {
                 System.out.println("(" + Objects.requireNonNull(event.getGuild()).getName() + ") " + event.getUser().getName() + " used /" + event.getName());
             } else if (logging) {
@@ -164,7 +164,7 @@ public class Main extends ListenerAdapter {
                         break;
                 }
             }
-        }else{
+        } else {
             event.reply("you can't do that").setEphemeral(true).queue();
         }
     }
@@ -176,13 +176,11 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    public void onModalInteraction( ModalInteractionEvent event) {
+    public void onModalInteraction(ModalInteractionEvent event) {
         User moss = event.getJDA().retrieveUserById(Main.moss).complete();
-        moss.openPrivateChannel().queue((channel) -> {
-            channel.sendMessage("cat submission by " + event.getUser().getName() + "#" + event.getUser().getDiscriminator() + ":\n" +
-                    "`link: `" + event.getValue("link").getAsString() + "\n" +
-                    "`reason: `" + event.getValue("reason").getAsString()).queue();
-        });
+        moss.openPrivateChannel().queue((channel) -> channel.sendMessage("cat submission by " + event.getUser().getName() + "#" + event.getUser().getDiscriminator() + ":\n" +
+                "`link: `" + Objects.requireNonNull(event.getValue("link")).getAsString() + "\n" +
+                "`reason: `" + Objects.requireNonNull(event.getValue("reason")).getAsString()).queue());
         event.reply("cat has been submitted for review").setEphemeral(true).queue();
     }
 
@@ -196,11 +194,11 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    public static void dmException(JDA jda, Exception e){
+    public static void dmException(JDA jda, Exception e) {
         User moss = jda.retrieveUserById(Main.moss).complete();
         moss.openPrivateChannel().queue((channel) -> {
             String error = Arrays.toString(e.getStackTrace());
-            channel.sendMessage(error.substring(0,Math.min(error.length(),1000))).queue();
+            channel.sendMessage(error.substring(0, Math.min(error.length(), 1000))).queue();
         });
     }
 }

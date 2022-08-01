@@ -16,7 +16,8 @@ public class Standard {
         pingCommand(event);
     }
 
-    public Standard(){}
+    public Standard() {
+    }
 
     public void helpCommand(MessageReceivedEvent event) {
         EmbedBuilder builder = new EmbedBuilder();

@@ -13,9 +13,10 @@ import static bot.main.Main.*;
 
 public class Stealth {
 
-    public Stealth(){}
+    public Stealth() {
+    }
 
-    public void trigger(MessageReceivedEvent event){
+    public void trigger(MessageReceivedEvent event) {
         makeCheekiHappyCommand(event);
         activeRelay(event);
         passiveRelay(event);
@@ -52,7 +53,7 @@ public class Stealth {
                     user.openPrivateChannel().queue((channel) -> channel.sendMessage(message).queue());
                     event.getMessage().addReaction("\u2705").queue();
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Main.dmException(jda, e);
             }
         }

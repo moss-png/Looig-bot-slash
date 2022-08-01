@@ -40,7 +40,8 @@ public class Cat {
         }
     }
 
-    public Cat(){}
+    public Cat() {
+    }
 
     public void funnyCatCommand(MessageReceivedEvent event) {
         try {
@@ -123,7 +124,7 @@ public class Cat {
             }
         } catch (NullPointerException e) {
             event.reply("Couldn't access target directory").queue();
-        } catch (Exception e){
+        } catch (Exception e) {
             Main.dmException(jda, e);
         }
     }
@@ -204,12 +205,12 @@ public class Cat {
 
     }
 
-    public void catchCatLink(MessageReceivedEvent event){
-        String file = event.getMessage().getContentRaw().substring(("<https://cta.pet/cats/").length(),event.getMessage().getContentRaw().length()-1);
+    public void catchCatLink(MessageReceivedEvent event) {
+        String file = event.getMessage().getContentRaw().substring(("<https://cta.pet/cats/").length(), event.getMessage().getContentRaw().length() - 1);
         event.getMessage().editMessage("\u200B").addFile(new File(catFolder + "/" + file)).queue();
     }
 
-    public void submitNewCat(SlashCommandInteractionEvent event){
+    public void submitNewCat(SlashCommandInteractionEvent event) {
         TextInput link = TextInput.create("link", "Media link of the cat you want to add", TextInputStyle.SHORT)
                 .setPlaceholder("link")
                 .setRequiredRange(1, 1000)
@@ -217,7 +218,7 @@ public class Cat {
 
         TextInput reason = TextInput.create("reason", "Why do you think I should add this cat", TextInputStyle.PARAGRAPH)
                 .setPlaceholder("reason")
-                .setRequiredRange(0, 1000)
+                .setRequiredRange(1, 1000)
                 .build();
 
         Modal modal = Modal.create("catsubmission", "Cat Submission Form")

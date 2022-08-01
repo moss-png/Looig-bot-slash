@@ -23,7 +23,7 @@ public class Internal {
                             new SubcommandData("get", "posts funny cat image/video")
                                     .addOption(OptionType.INTEGER, "id", "numerical id of the cat, random if left blank"),
                             new SubcommandData("count", "get the total count and filesize of all cats"),
-                            new SubcommandData("submit","submit a new cat for review. Don't send me inappropriate stuff")),
+                            new SubcommandData("submit", "submit a new cat for review. Don't send me inappropriate stuff")),
                     Commands.slash("internal", "internal bot settings")
                             .addSubcommands(
                             new SubcommandData("logging", "off at launch, used for debugging only")

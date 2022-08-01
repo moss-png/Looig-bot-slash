@@ -11,9 +11,10 @@ import static bot.main.Main.*;
 
 public class Toys {
 
-    public Toys(){}
+    public Toys() {
+    }
 
-    public void trigger(MessageReceivedEvent event){
+    public void trigger(MessageReceivedEvent event) {
         loveYouCommand(event);
         trueCommand(event);
         pfpCommand(event);
@@ -25,7 +26,7 @@ public class Toys {
 
     public void loveYouCommand(MessageReceivedEvent event) {
         String content = event.getMessage().getContentRaw();
-        if (content.contains("love you <@" + looig + ">" )) {
+        if (content.contains("love you <@" + looig + ">")) {
             event.getChannel().sendMessage("love you too " + event.getAuthor().getName() + "!").queue();
         }
     }
