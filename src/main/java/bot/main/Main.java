@@ -5,10 +5,15 @@ import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
@@ -156,6 +161,24 @@ public class Main extends ListenerAdapter {
                 case "tools":
                     new Tools(event);
                     break;
+                case "modal":
+                    TextInput subject = TextInput.create("wooh", "WOOH!", TextInputStyle.SHORT)
+                            .setPlaceholder("yeah")
+                            .setRequiredRange(10, 100)
+                            .build();
+
+                    TextInput body = TextInput.create("wohoo", "WOHOO!", TextInputStyle.PARAGRAPH)
+                            .setPlaceholder("hell yeah")
+                            .setMinLength(30)
+                            .setMaxLength(1000)
+                            .build();
+
+                    Modal modal = Modal.create("testmodal", "Test Modal")
+                            .addActionRows(ActionRow.of(subject), ActionRow.of(body))
+                            .build();
+
+                    event.replyModal(modal).queue();
+                    break;
             }
         }
     }
@@ -164,6 +187,12 @@ public class Main extends ListenerAdapter {
     public void onButtonInteraction(ButtonInteractionEvent event) {
         if (event.getComponentId().contains("module")) {
             internal.toggleModulesCommand(event);
+        }
+    }
+
+    public void onModalInteraction( ModalInteractionEvent event) {
+        if (event.getModalId().equals("testmodal")) {
+            event.reply("congratulations").setEphemeral(true).queue();
         }
     }
 

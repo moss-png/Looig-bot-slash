@@ -45,7 +45,8 @@ public class Internal {
                                     .addOption(OptionType.INTEGER, "d", "if left blank a d6 will be used"),
                             new SubcommandData("coinflip", "flip a coin (riveting!)"),
                             new SubcommandData("asklooig", "magic 8ball type beat")
-                                    .addOption(OptionType.STRING, "q", "the question in question", true))
+                                    .addOption(OptionType.STRING, "q", "the question in question", true)),
+                    Commands.slash("modal","allow me to blow your mind or blow up, not sure which one")
             };
 
 
