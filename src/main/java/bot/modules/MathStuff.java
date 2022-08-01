@@ -23,9 +23,9 @@ public class MathStuff {
     public void gcdCommand(SlashCommandInteractionEvent event) {
         try {
 
-            int a = Objects.requireNonNull(event.getOption("a")).getAsInt();
-            int b = Objects.requireNonNull(event.getOption("b")).getAsInt();
-            int help;
+            long a = Objects.requireNonNull(event.getOption("a")).getAsInt();
+            long b = Objects.requireNonNull(event.getOption("b")).getAsInt();
+            long help;
 
             while (b != 0) {
                 help = b;
@@ -42,14 +42,14 @@ public class MathStuff {
 
     public void lcmCommand(SlashCommandInteractionEvent event) {
         try {
-            int a = Objects.requireNonNull(event.getOption("a")).getAsInt();
-            int b = Objects.requireNonNull(event.getOption("b")).getAsInt();
+            long a = Objects.requireNonNull(event.getOption("a")).getAsInt();
+            long b = Objects.requireNonNull(event.getOption("b")).getAsInt();
 
-            int absNumber1 = Math.abs(a);
-            int absNumber2 = Math.abs(b);
-            int absHigherNumber = Math.max(absNumber1, absNumber2);
-            int absLowerNumber = Math.min(absNumber1, absNumber2);
-            int lcm = absHigherNumber;
+            long absNumber1 = Math.abs(a);
+            long absNumber2 = Math.abs(b);
+            long absHigherNumber = Math.max(absNumber1, absNumber2);
+            long absLowerNumber = Math.min(absNumber1, absNumber2);
+            long lcm = absHigherNumber;
             while (lcm % absLowerNumber != 0) {
                 lcm += absHigherNumber;
             }
@@ -63,8 +63,8 @@ public class MathStuff {
 
     public void isPrimeCommand(SlashCommandInteractionEvent event) {
         try {
-            int number = Objects.requireNonNull(event.getOption("x")).getAsInt();
-            int i = 2;
+            long number = Objects.requireNonNull(event.getOption("x")).getAsInt();
+            long i = 2;
             while ((i < number) && (number % i != 0)) {
                 i++;
             }
