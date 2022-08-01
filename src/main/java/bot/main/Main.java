@@ -110,6 +110,9 @@ public class Main extends ListenerAdapter {
             if (toysModule) toys.trigger(event);
             if (stealthModule) stealth.trigger(event);
         } else {
+            if (content.contains("<https://cta.pet/cats/")){
+                cat.catchCatLink(event);
+            }
             if (logging) {
                 System.out.println(">>> " + content);
             }

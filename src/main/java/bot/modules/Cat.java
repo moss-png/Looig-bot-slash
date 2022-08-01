@@ -87,13 +87,13 @@ public class Cat {
     }
 
     public void funnyCatGetCommand(SlashCommandInteractionEvent event) {
-        event.deferReply().complete();
+        //event.deferReply().complete();
         JDA jda = event.getJDA();
         try {
             File targetDir = new File(catFolder);
             int max = Objects.requireNonNull(targetDir.list()).length - 1;
             if (max == -1) {
-                event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
+                event.reply("no funny cats are in the target folder \uD83D\uDE3F").queue();
             } else {
                 if (event.getOption("id") == null) {
                     int index = (int) (Math.random() * (max + 1));
@@ -109,26 +109,26 @@ public class Cat {
                         }
                         sendCat(event, Objects.requireNonNull(event.getOption("id")).getAsInt());
                     } catch (IndexOutOfBoundsException e) {
-                        event.getHook().sendMessage("couldn't find the cat specified").queue();
+                        event.reply("couldn't find the cat specified").queue();
                     } catch (NumberFormatException e) {
-                        event.getHook().sendMessage("what do you want from me").queue();
+                        event.reply("what do you want from me").queue();
                     }
                 }
             }
         } catch (NullPointerException e) {
-            event.getHook().sendMessage("Couldn't access target directory").queue();
+            event.reply("Couldn't access target directory").queue();
         } catch (Exception e){
             Main.dmException(jda, e);
         }
     }
 
     public void funnyCatCountCommand(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
+        //event.deferReply().queue();
         try {
             File targetDir = new File(catFolder);
             int max = Objects.requireNonNull(targetDir.list()).length - 1;
             if (max == -1) {
-                event.getHook().sendMessage("no funny cats are in the target folder \uD83D\uDE3F").queue();
+                event.reply("no funny cats are in the target folder \uD83D\uDE3F").queue();
             } else {
                 int count = Objects.requireNonNull(new File(catFolder).list()).length;
                 long size = 0;
@@ -138,11 +138,11 @@ public class Cat {
                     size += files[i].length();
                 }
                 double sizeMB = size / 1000000.0;
-                event.getHook().sendMessage(count + " files taking up " + sizeMB + " megabytes of space").queue();
+                event.reply(count + " files taking up " + sizeMB + " megabytes of space").queue();
             }
 
         } catch (NullPointerException e) {
-            event.getHook().sendMessage("Couldn't access target directory").queue();
+            event.reply("Couldn't access target directory").queue();
         }
     }
 
@@ -190,18 +190,18 @@ public class Cat {
         return fileNames[index];
     }
 
-    private void sendCat(SlashCommandInteractionEvent event, int index){
+    private void sendCat(SlashCommandInteractionEvent event, int index) {
         String file = getCatFromIndex(index);
-        if (event.getOption("aslink") != null &&
-                Objects.requireNonNull(event.getOption("aslink")).getAsBoolean()) {
-            event.getHook().sendMessage("https://cta.pet/cats/" + file).addActionRow(
-                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
-        } else {
-            event.getHook().sendFile(new File(catFolder + "/" + file)).addActionRow(
-                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
-        }
+        event.reply("<https://cta.pet/cats/" + file + ">").addActionRow(
+                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                        .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+
+    }
+
+    public void catchCatLink(MessageReceivedEvent event){
+        String file = event.getMessage().getContentRaw().substring(("<https://cta.pet/cats/").length(),event.getMessage().getContentRaw().length()-1);
+        event.getMessage().editMessage("\u200B").addFile(new File(catFolder + "/" + file)).queue();
+        event.getMessage().suppressEmbeds(true).queue();
     }
 
 }
