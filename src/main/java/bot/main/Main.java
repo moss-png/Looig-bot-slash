@@ -148,7 +148,7 @@ public class Main extends ListenerAdapter {
                         break;
                     case "internal":
                         if (Arrays.stream(whitelist).noneMatch(event.getUser().getId()::contains)) {
-                            event.reply("you don't get to do that").queue();
+                            event.reply("you can't do that").setEphemeral(true).queue();
                         } else {
                             new Internal(event);
                         }
