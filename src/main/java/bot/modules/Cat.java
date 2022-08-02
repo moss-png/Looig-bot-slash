@@ -94,7 +94,6 @@ public class Cat {
     }
 
     public void funnyCatGetCommand(SlashCommandInteractionEvent event) {
-        //event.deferReply().complete();
         JDA jda = event.getJDA();
         try {
             File targetDir = new File(catFolder);
@@ -130,7 +129,6 @@ public class Cat {
     }
 
     public void funnyCatCountCommand(SlashCommandInteractionEvent event) {
-        //event.deferReply().queue();
         try {
             File targetDir = new File(catFolder);
             int max = Objects.requireNonNull(targetDir.list()).length - 1;
@@ -199,10 +197,15 @@ public class Cat {
 
     private void sendCat(SlashCommandInteractionEvent event, int index) {
         String file = getCatFromIndex(index);
-        event.reply("<https://cta.pet/cats/" + file + ">").addActionRow(
-                Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                        .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
-
+        if (event.getOption("ephemeral") != null && Objects.requireNonNull(event.getOption("ephemeral")).getAsBoolean()) {
+            event.reply("https://cta.pet/cats/" + file).addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).setEphemeral(true).queue();
+        } else {
+            event.reply("<https://cta.pet/cats/" + file + ">").addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+        }
     }
 
     public void catchCatLink(MessageReceivedEvent event) {
