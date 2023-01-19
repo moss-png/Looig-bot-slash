@@ -173,6 +173,8 @@ public class Main extends ListenerAdapter {
     public void onButtonInteraction(ButtonInteractionEvent event) {
         if (event.getComponentId().contains("module")) {
             internal.toggleModulesCommand(event);
+        }else if (event.getComponentId().contains("anotherCat")){
+            cat.anotherCat(event);
         }
     }
 

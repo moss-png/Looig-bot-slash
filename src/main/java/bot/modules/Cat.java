@@ -4,6 +4,7 @@ import bot.main.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Modal;
@@ -40,8 +41,7 @@ public class Cat {
         }
     }
 
-    public Cat() {
-    }
+    public Cat() {}
 
     public void funnyCatCommand(MessageReceivedEvent event) {
         try {
@@ -86,7 +86,7 @@ public class Cat {
             } else if (content.contains(getGuildPrefix(event) + "funnycat save")) {
                 event.getMessage().reply("sorry you can't use that").mentionRepliedUser(false).queue();
             } else if (content.contains(getGuildPrefix(event) + "funnycat")) {
-                event.getMessage().reply("try slash commands").mentionRepliedUser(false).queue();
+                event.getMessage().reply("try `/funnycat` instead").mentionRepliedUser(false).queue();
             }
         } catch (NullPointerException e) {
             event.getMessage().reply("couldn't access the target directory").mentionRepliedUser(false).queue();
@@ -200,11 +200,32 @@ public class Cat {
         if (event.getOption("ephemeral") != null && Objects.requireNonNull(event.getOption("ephemeral")).getAsBoolean()) {
             event.reply("https://cta.pet/cats/" + file).addActionRow(
                     Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).setEphemeral(true).queue();
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31")),
+                    Button.primary("anotherCat","Another")
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDD00"))).setEphemeral(true).queue();
         } else {
             event.reply("<https://cta.pet/cats/" + file + ">").addActionRow(
                     Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
-                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31"))).queue();
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31")),
+                    Button.primary("anotherCatEphemeral","Another")
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDD00"))).queue();
+        }
+    }
+
+    private void sendCat(ButtonInteractionEvent event, int index, boolean ephemeral) {
+        String file = getCatFromIndex(index);
+        if (!ephemeral) {
+            event.reply("https://cta.pet/cats/" + file).addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31")),
+                    Button.primary("anotherCat","Another")
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDD00"))).setEphemeral(true).queue();
+        } else {
+            event.reply("<https://cta.pet/cats/" + file + ">").addActionRow(
+                    Button.link("https://cta.pet/cats/" + file, "cta.pet | " + index)
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDC31")),
+                    Button.primary("anotherCatEphemeral","Another")
+                            .withEmoji(Emoji.fromMarkdown("\uD83D\uDD00"))).queue();
         }
     }
 
@@ -229,6 +250,29 @@ public class Cat {
                 .build();
 
         event.replyModal(modal).queue();
+    }
+
+    public void anotherCat(ButtonInteractionEvent event) {
+        if (event.getComponentId().contains("anotherCat")) {
+            JDA jda = event.getJDA();
+            try {
+                File targetDir = new File(catFolder);
+                int max = Objects.requireNonNull(targetDir.list()).length - 1;
+                if (max == -1) {
+                    event.reply("no funny cats are in the target folder \uD83D\uDE3F").queue();
+                } else {
+                    int index = (int) (Math.random() * (max + 1));
+                    if (logging) {
+                        System.out.println(index + "");
+                    }
+                    sendCat(event, index, event.getComponentId().contains("Ephemeral"));
+                }
+            } catch (NullPointerException e) {
+                event.reply("Couldn't access target directory").queue();
+            } catch (Exception e) {
+                Main.dmException(jda, e);
+            }
+        }
     }
 
 }
