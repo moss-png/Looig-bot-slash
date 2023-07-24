@@ -157,7 +157,7 @@ public class Cat {
 
     public void deleteLastCat(MessageReceivedEvent event) {
         Objects.requireNonNull(
-                        Objects.requireNonNull(event.getJDA().getGuildById(astaCult)).getTextChannelById(funnyCats))
+                        Objects.requireNonNull(event.getJDA().getGuildById(astaCult)).getNewsChannelById(funnyCats))
                 .getHistory().retrievePast(1)
                 .map(messages -> messages.get(0))
                 .queue(message -> {
